@@ -10,6 +10,14 @@ import java.io.IOException;
  * @version 1.0
  */
 public class BadSocialMedia implements SocialMediaPlatform {
+	String handle;
+	int ID; 
+	String description;
+
+
+
+
+
 
 	@Override
 	public int createAccount(String handle) throws IllegalHandleException, InvalidHandleException {
