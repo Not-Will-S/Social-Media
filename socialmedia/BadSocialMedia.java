@@ -1,5 +1,6 @@
 package socialmedia;
-
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.io.IOException;
 
 /**
@@ -10,18 +11,46 @@ import java.io.IOException;
  * @version 1.0
  */
 public class BadSocialMedia implements SocialMediaPlatform {
-	String handle;
-	int ID; 
-	String description;
+	public ArrayList<Accounts> accountList = new ArrayList<Accounts>();
+	
+	
+	
+	
 
 
-
+	
+	//Getter method so array can be accessed in other classes
+	public ArrayList<Accounts> getMyArray(){
+		return accountList;
+	}
 
 
 
 	@Override
-	public int createAccount(String handle) throws IllegalHandleException, InvalidHandleException {
+	// public int createAccount(String handle) throws IllegalHandleException, InvalidHandleException {
+	// 	// TODO Auto-generated method stub
+		
+	// 	Accounts account = new Accounts("hand", "Desc");
+	// 	account.ID = accountList.size() + 1;	
+	// 	//System.out.print("ID = " + account.ID + " Handle = " + account.Handle + " Description = " + account.Description);
+	// 	accountList.add(account);
+	// 	Accounts account1 = new Accounts("Handle", "Description");
+	// 	account1.ID = accountList.size() + 1;
+	// 	accountList.add(account1);		
+	// 	return 0;
+	//}
+	public int createAccount(String handle){
+		//adds account for testing
+		Accounts TestAcc = new Accounts("HandleTest", "DescTest", 1);
+		accountList.add(TestAcc);
 		// TODO Auto-generated method stub
+		Accounts account = new Accounts("hand", "Desc");
+		account.ID = accountList.size() + 1;
+		accountList.add(account);
+
+		Accounts account1 = new Accounts("Handle", "Description");
+		account1.ID = accountList.size() + 1;
+		accountList.add(account1);
 		return 0;
 	}
 
@@ -32,14 +61,15 @@ public class BadSocialMedia implements SocialMediaPlatform {
 	}
 
 	@Override
-	public void removeAccount(int id) throws AccountIDNotRecognisedException {
+	public void removeAccount(int id){// throws AccountIDNotRecognisedException {
 		// TODO Auto-generated method stub
-
+		accountList.removeIf(Account -> Account.ID == id);
 	}
 
 	@Override
-	public void removeAccount(String handle) throws HandleNotRecognisedException {
+	public void removeAccount(String handle) { // throws HandleNotRecognisedException {
 		// TODO Auto-generated method stub
+		accountList.removeIf(Account -> Account.Handle == handle);
 
 	}
 
