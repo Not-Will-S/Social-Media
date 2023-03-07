@@ -1,4 +1,5 @@
 package socialmedia;
+import java.util.ArrayList;
 
 /**
  * A short program to illustrate an app testing some minimal functionality of a
@@ -12,11 +13,13 @@ package socialmedia;
  */
 public class SocialMediaPlatformTestApp {
 	public static void main(String[] args){
-		Accounts account = new Accounts("hand", "Desc");
-		account.ID = account.CreateID();
-		
-		System.out.print("ID = " + account.ID + " Handle = " + account.Handle + " Description = " + account.Description);
-
+		BadSocialMedia platform = new BadSocialMedia();
+		platform.createAccount("Handle");
+		Accounts account = platform.accountList.get(0);
+		Accounts account1 = platform.accountList.get(1);
+		System.out.print(platform.accountList.size());
+		platform.removeAccount(1);
+		System.out.print(platform.accountList.size());
 
 	}
 	

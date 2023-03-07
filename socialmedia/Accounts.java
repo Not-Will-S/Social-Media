@@ -9,39 +9,44 @@ public class Accounts{
     public String Description; // Description stores a short description of the account
 
     //Array Lists to be used later
-    ArrayList<Integer> accountID = new ArrayList<>();
+    //ArrayList<Accounts> accountList = new ArrayList<>();
 
 
     //This is the constructor for accounts with only the handle
     public Accounts(String handle){
-        this.ID = CreateID();
+        //this.ID = CreateID();
         this.Handle = handle;
 
     }
     //This is the constructor for accounts with Handles and descriptions
     public Accounts(String handle, String description){
-        this.ID = CreateID();
+        //this.ID = CreateID();
         this.Handle = handle;
         this.Description = description;
     }
 
+    // for Deletion
+    //This is the constructor for accounts with Handles and descriptions
+    public Accounts(String handle, String description, int ID){
+        this.ID = ID;
+        this.Handle = handle;
+        this.Description = description;
+    }
+    // public int CreateID(){
+    //     int ID = 0;
+    //     int size = 0;
+    //     BadSocialMedia account = new BadSocialMedia();
+    //     System.out.print("Account size at initialization is: " + account.accountList.size());
+    //     if(account.accountList.size() == 0) { //Checks if the accountID array list is empty and adds the first value if it is 
+    //         ID = 1;      
+    //     } else {
+    //         size = account.accountList.size() + 2;          
+    //         ID = size; 
 
- 
-    public int CreateID(){
-        int currentHighest;
-        int ID = 0;
-        if(accountID.isEmpty()) { //Checks if the accountID array list is empty and adds the first value if it is 
-            accountID.add(1);
-            ID = 1;      
-        } else {
-            currentHighest = accountID.get(accountID.size() -1) + 1;
-            ID = currentHighest; 
-
-        }
-        return ID;
+    //     }
+    //     return ID;
     }
 
 
 
 
-}
