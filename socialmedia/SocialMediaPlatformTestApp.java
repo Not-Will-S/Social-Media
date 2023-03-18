@@ -14,13 +14,9 @@ import java.util.ArrayList;
 public class SocialMediaPlatformTestApp {
 	public static void main(String[] args){
 		BadSocialMedia platform = new BadSocialMedia();
-		platform.createAccount("Handle");
-		Accounts account = platform.accountList.get(0);
-		Accounts account1 = platform.accountList.get(1);
-		System.out.print(platform.accountList.size());
-		platform.removeAccount(1);
-		System.out.print(platform.accountList.size());
-
+		 platform.createAccount("Handle");
+		 System.out.print(platform.accountList.size());
+		platform.createPost("Handle", "Birds aren't real");
 	}
 	
 
