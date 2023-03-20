@@ -33,13 +33,13 @@ public class Posts {
 
     class Comments extends Posts{
         public int commentId;
-        public String commentPostHandle; 
+        public String commentHandle; 
         public int commentPostId;
         public String commentBody;
         
         //Constructor for comments objects
-        public Comments(String commentPostHandle, int commentPostId, String commentBody){
-            this.commentPostHandle = commentPostHandle;
+        public Comments(String commentHandle, int commentPostId, String commentBody){
+            this.commentHandle = commentHandle;
             this.commentPostId = commentPostId;
             this.commentBody = commentBody;
         }
