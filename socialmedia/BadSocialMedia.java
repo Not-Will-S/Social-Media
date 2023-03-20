@@ -53,10 +53,11 @@ public class BadSocialMedia implements SocialMediaPlatform {
 		return 0;
 	}
 
+	//This is legendary
 	// ********* Need to create a way to make sure all account handles are unique - e.g search ArrayList first and display error
 	public boolean handletaken(String handle) {
 		for(Accounts account : accountList){
-			return account.Handle.contains(handle);
+ 		return account.Handle.contains(handle);
 		}
 	}
 	
@@ -170,7 +171,7 @@ public class BadSocialMedia implements SocialMediaPlatform {
 			Comments comment = new Comments(handle, id, message);		
 			comment.commentId = commentList.size() + 1;
 			commentList.add(comment);
-		 // Not finished! Hi Greg
+		 
 		return 0;
 	}
  
@@ -240,6 +241,7 @@ public class BadSocialMedia implements SocialMediaPlatform {
 					postIdHigh = post.postID;
 				}
 			}
+			tempHighest = 0;
 		}
 		return postIdHigh;
 	}
@@ -249,25 +251,38 @@ public class BadSocialMedia implements SocialMediaPlatform {
 
 	int mostEndorsedAccountId;
 	int mostEndorsedCount;
+	int highEndorsed;
 	@Override
 	public int getMostEndorsedAccount() {
 		//for every account get a list of every post made
 		//for every post get a list of every endorsement made and store it in a counter
 		//compare after
-		for(Accounts account : accountList){
-			for(Posts post : postList){
-
+		for(Accounts account : accountList){ //loops through every account
+			for(Posts post : postList){//Loops through every post for every account
+				if(post.AccountHandleLink == account.Handle){ //Checks that the post is relevant to the account of the current loop
+					for(Endorsements endorsement : endorsementList){ //loops through every endorsement 
+						if(endorsement.postID == post.postID){ //checks the endorsements to make sure they are for the specific post 
+							mostEndorsedCount = mostEndorsedCount + 1; //increments the counter for the specific post
+						}
+						if(mostEndorsedCount > highEndorsed){
+							highEndorsed = mostEndorsedCount;
+							mostEndorsedAccountId = account.ID;
+						}
+					}
+				}		
 			}
-
+			mostEndorsedCount = 0;
 		}
 
-		return 0;
+		return mostEndorsedAccountId;
 	}
 
 	@Override
 	public void erasePlatform() {
-		// TODO Auto-generated method stub
-
+		accountList.clear();
+		postList.clear();
+		commentList.clear();
+		endorsementList.clear();
 	}
 
 	@Override
