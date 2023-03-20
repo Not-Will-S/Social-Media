@@ -54,12 +54,28 @@ public class BadSocialMedia implements SocialMediaPlatform {
 	}
 
 	// ********* Need to create a way to make sure all account handles are unique - e.g search ArrayList first and display error
+	public boolean handletaken(String handle) {
+		for(Accounts account : accountList){
+			return account.Handle.contains(handle);
+		}
+	}
+	
 	@Override
 	public int createAccount(String handle, String description) throws IllegalHandleException, InvalidHandleException {
 		Accounts account = new Accounts(handle, description);
-		account.ID = accountList.size() + 1;
-		accountList.add(account);
-		return 0;
+		if (handletaken(handle)) {
+			throw new IllegalHandleException("The handle: " + handle + "is taken");
+		} else if (handle.isEmpty()) {
+			throw new InvalidHandleException("The handle cannot be empty");
+		} else if (handle.length() > 30) {
+			throw new InvalidHandleException("The handle cannot exceed 30 characters");
+		} else if (handle.contains(" ")) {
+			throw new InvalidHandleException("The handle cannot contain white spaces");
+		} else {
+			account.ID = accountList.size() + 1;
+			accountList.add(account);
+			return 0;
+		}
 	}
 
 	@Override
