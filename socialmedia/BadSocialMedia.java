@@ -1,10 +1,6 @@
 package socialmedia;
 import java.util.ArrayList;
 import java.util.Iterator;
-
-import socialmedia.Endorsements.Comments;
-import socialmedia.Endorsements.comments;
-
 import java.io.IOException;
 
 /**
@@ -18,7 +14,7 @@ public class BadSocialMedia implements SocialMediaPlatform {
 	public ArrayList<Accounts> accountList = new ArrayList<Accounts>();
 	public ArrayList<Posts> postList = new ArrayList<Posts>();
 	public ArrayList<Endorsements> endorsementList = new ArrayList<Endorsements>();
-	public ArrayList<socialmedia.Comments>  commentList = new ArrayList<comments>();
+	public ArrayList<Comments>  commentList = new ArrayList<Comments>();
 
 	
 	
@@ -155,21 +151,32 @@ public class BadSocialMedia implements SocialMediaPlatform {
 	@Override
 	public int commentPost(String handle, int id, String message){ //throws HandleNotRecognisedException,
 			//PostIDNotRecognisedException, NotActionablePostException, InvalidPostException {
-			Comments comment = new Comments(handle, id, message);
+			Comments comment = new Comments(handle, id, message);		
 			comment.commentId = commentList.size() + 1;
-			
+			commentList.add(comment);
+		 // Not finished! Hi Greg
 		return 0;
 	}
  
 	@Override
 	public void deletePost(int id) throws PostIDNotRecognisedException {
-		// TODO Auto-generated method stub
-
+		for (Posts post : postList){
+			if(post.postID == id){
+				postList.remove(post);			
+			}
+		}
+		for(Endorsements endorsement : endorsementList){
+			if(endorsement.postID == id){
+				endorsementList.remove(endorsement);
+			}
+		}
+		//Need to create logic for changing comments to default message but ionwanna cos it sounds hard - do later
+			
 	}
 
 	@Override
 	public String showIndividualPost(int id) throws PostIDNotRecognisedException {
-		// TODO Auto-generated method stub
+		// TODO Auto-generat
 		return null;
 	}
 
@@ -182,37 +189,62 @@ public class BadSocialMedia implements SocialMediaPlatform {
 
 	@Override
 	public int getNumberOfAccounts() {
-		// TODO Auto-generated method stub
-		return 0;
+		//Not sure why this is hard but it's done 
+		return accountList.size();
 	}
 
 	@Override
 	public int getTotalOriginalPosts() {
-		// TODO Auto-generated method stub
-		return 0;
+		
+		return postList.size();
 	}
 
 	@Override
 	public int getTotalEndorsmentPosts() {
-		// TODO Auto-generated method stub
-		return 0;
+		return endorsementList.size();
 	}
 
 	@Override
 	public int getTotalCommentPosts() {
-		// TODO Auto-generated method stub
-		return 0;
+		return commentList.size();
 	}
 
+	int currentHighest;
+	int tempHighest;
+	int postIdHigh;
 	@Override
 	public int getMostEndorsedPost() {
-		// TODO Auto-generated method stub
-		return 0;
+		for(Posts post : postList){
+			for(Endorsements endorsement : endorsementList){
+				if(endorsement.postID == post.postID){
+					tempHighest = tempHighest + 1;
+				}
+				if(tempHighest > currentHighest){
+					currentHighest = tempHighest;
+					postIdHigh = post.postID;
+				}
+			}
+		}
+		return postIdHigh;
 	}
 
+
+
+
+	int mostEndorsedAccountId;
+	int mostEndorsedCount;
 	@Override
 	public int getMostEndorsedAccount() {
-		// TODO Auto-generated method stub
+		//for every account get a list of every post made
+		//for every post get a list of every endorsement made and store it in a counter
+		//compare after
+		for(Accounts account : accountList){
+			for(Posts post : postList){
+
+			}
+
+		}
+
 		return 0;
 	}
 
