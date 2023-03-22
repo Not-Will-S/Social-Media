@@ -53,30 +53,34 @@ public class BadSocialMedia implements SocialMediaPlatform {
 		return 0;
 	}
 
-	//This is legendary
 	// ********* Need to create a way to make sure all account handles are unique - e.g search ArrayList first and display error
-	public boolean handletaken(String handle) {
-		for(Accounts account : accountList){
- 		return account.Handle.contains(handle);
-		}
-	}
 	
 	@Override
 	public int createAccount(String handle, String description) throws IllegalHandleException, InvalidHandleException {
-		Accounts account = new Accounts(handle, description);
-		if (handletaken(handle)) {
-			throw new IllegalHandleException("The handle: " + handle + "is taken");
-		} else if (handle.isEmpty()) {
-			throw new InvalidHandleException("The handle cannot be empty");
-		} else if (handle.length() > 30) {
-			throw new InvalidHandleException("The handle cannot exceed 30 characters");
-		} else if (handle.contains(" ")) {
-			throw new InvalidHandleException("The handle cannot contain white spaces");
-		} else {
+		//try {
+			//Accounts account = new Accounts(handle, description);
+			//accountList.add(account);
+			for (Accounts account : accountList) {
+				if (account.getHandle().equals(handle)) {
+					throw new IllegalHandleException("The handle: " + handle + "is taken");
+				}
+			}
+			if (handle.isEmpty()) {
+				throw new InvalidHandleException("The handle cannot be empty");
+			} else if (handle.length() > 30) {
+				throw new InvalidHandleException("The handle cannot exceed 30 characters");
+			} else if (handle.contains(" ")) {
+				throw new InvalidHandleException("The handle cannot contain white spaces");
+			} else {
+			Accounts account = new Accounts(handle, description);
 			account.ID = accountList.size() + 1;
 			accountList.add(account);
 			return 0;
-		}
+			}
+		// } catch (IllegalHandleException | InvalidHandleException e) {
+		// 	System.out.println("Error: " + e.getMessage());
+		// 	throw e;
+		// }
 	}
 
 	@Override
@@ -93,8 +97,6 @@ public class BadSocialMedia implements SocialMediaPlatform {
 
 	}
 	
-
-	//************ I've just assumed this works but I dont see why it wouldnt' - needs testing
 	@Override
 	public void changeAccountHandle(String oldHandle, String newHandle){
 			//throws HandleNotRecognisedException, IllegalHandleException, InvalidHandleException
@@ -105,8 +107,6 @@ public class BadSocialMedia implements SocialMediaPlatform {
 		}
 	}
 
-
-	//**********same as above  */
 	@Override
 	public void updateAccountDescription(String handle, String description) // throws HandleNotRecognisedException 
 	{
@@ -118,13 +118,12 @@ public class BadSocialMedia implements SocialMediaPlatform {
 
 	}
 
-	//****** needs testing but should be easy to test */
 	@Override
 	public String showAccount(String handle) //throws HandleNotRecognisedException 
 		{
 		for(Accounts account : accountList){
 			if(account.Handle == handle){
-				System.out.print(" Account ID: " + account.ID +  "/n Account Handle: " + account.Handle + "/n Account Description:" +  account.Description);
+				System.out.print("\n Account ID: " + account.ID +  "\n Account Handle: " + account.Handle + "\n Account Description:" +  account.Description + "\n");
 			}
 		}
 
@@ -145,7 +144,7 @@ public class BadSocialMedia implements SocialMediaPlatform {
 		}
 		post.postID = postList.size() + 1;
 		postList.add(post);
-		System.out.print("Post ID " + post.postID + "/n post messsage: " + post.postContent + "/n Account Handle: " + post.AccountHandleLink);
+		System.out.print("Post ID " + post.postID + "\n post messsage: " + post.postContent + "\n Account Handle: " + post.AccountHandleLink);
 		return 0;
 	}
 

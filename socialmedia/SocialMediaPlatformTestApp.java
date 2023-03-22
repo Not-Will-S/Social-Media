@@ -14,13 +14,18 @@ import java.util.ArrayList;
 public class SocialMediaPlatformTestApp {
 	public static void main(String[] args){
 		BadSocialMedia platform = new BadSocialMedia();
-		 platform.createAccount("Handle");
-		 System.out.print(platform.accountList.size());
+		platform.createAccount("Handle","iwtkms");
+		System.out.print(platform.accountList.size());
 		platform.createPost("Handle", "Birds aren't real");
+		platform.showAccount("Handle");
+		platform.changeAccountHandle("Handle", "Dick");
+		platform.showAccount("Dick");
+		platform.updateAccountDescription("Dick", "andy here");
+		platform.showAccount("Dick");
 	}
 	
-
-
+ 
+ 
 
 	/**
 	 * Test method.

@@ -22,6 +22,10 @@ public class Accounts{
         this.Description = description;
     }
 
+    public String getHandle() {
+        return Handle;
+    }
+
     //For deletion later after complete testing
     //This is the constructor for accounts with Handles and descriptions
     public Accounts(String handle, String description, int ID){
