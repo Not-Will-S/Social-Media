@@ -12,16 +12,24 @@ import java.util.ArrayList;
  * @version 1.0
  */
 public class SocialMediaPlatformTestApp {
-	public static void main(String[] args){
+	public static void main(String[] args) throws IllegalHandleException, InvalidHandleException, 
+	HandleNotRecognisedException, AccountIDNotRecognisedException{
 		BadSocialMedia platform = new BadSocialMedia();
 		platform.createAccount("Handle","iwtkms");
+		platform.createAccount("Greg");
+		platform.createAccount("ertgh");
+		//platform.createAccount("one");
+		//platform.createAccount("Handle", "iwtkms");
 		System.out.print(platform.accountList.size());
 		platform.createPost("Handle", "Birds aren't real");
 		platform.showAccount("Handle");
-		platform.changeAccountHandle("Handle", "Dick");
-		platform.showAccount("Dick");
-		platform.updateAccountDescription("Dick", "andy here");
-		platform.showAccount("Dick");
+		//platform.changeAccountHandle("Handle", "one");
+		// platform.showAccount("one");
+		// platform.updateAccountDescription("one", "newdesc");
+		// platform.showAccount("one");
+		// platform.removeAccount("one");
+		// platform.showAccount("one");
+		// platform.showAccount("Greg");
 	}
 	
  

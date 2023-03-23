@@ -40,10 +40,23 @@ public class BadSocialMedia implements SocialMediaPlatform {
 	// 	accountList.add(account1);		
 	// 	return 0;
 	//}
-	public int createAccount(String handle){
+	public int createAccount(String handle) throws IllegalHandleException, InvalidHandleException{
 		//adds account for testing
 		Accounts TestAcc = new Accounts("HandleTest", "DescTest", 1);
 		accountList.add(TestAcc);
+		
+		for (Accounts account : accountList) {
+			if (account.getHandle().equals(handle)) {
+				throw new IllegalHandleException("The handle '" + handle + "' is taken");
+			}
+		}
+		if (handle.isEmpty()) {
+			throw new InvalidHandleException("The handle cannot be empty");
+		} else if (handle.length() > 30) {
+			throw new InvalidHandleException("The handle cannot exceed 30 characters");
+		} else if (handle.contains(" ")) {
+			throw new InvalidHandleException("The handle cannot contain white spaces");
+		}
 		//instantiates Accounts to create a new object
 		Accounts account = new Accounts(handle);
 		//Finds what the next account ID should be by finding the total number of accounts and incrementing it
@@ -53,56 +66,71 @@ public class BadSocialMedia implements SocialMediaPlatform {
 		return 0;
 	}
 
-	// ********* Need to create a way to make sure all account handles are unique - e.g search ArrayList first and display error
-	
 	@Override
 	public int createAccount(String handle, String description) throws IllegalHandleException, InvalidHandleException {
-		//try {
-			//Accounts account = new Accounts(handle, description);
-			//accountList.add(account);
-			for (Accounts account : accountList) {
-				if (account.getHandle().equals(handle)) {
-					throw new IllegalHandleException("The handle: " + handle + "is taken");
-				}
+		for (Accounts account : accountList) {
+			if (account.getHandle().equals(handle)) {
+				throw new IllegalHandleException("The handle '" + handle + "' is taken");
 			}
-			if (handle.isEmpty()) {
-				throw new InvalidHandleException("The handle cannot be empty");
-			} else if (handle.length() > 30) {
-				throw new InvalidHandleException("The handle cannot exceed 30 characters");
-			} else if (handle.contains(" ")) {
-				throw new InvalidHandleException("The handle cannot contain white spaces");
-			} else {
-			Accounts account = new Accounts(handle, description);
-			account.ID = accountList.size() + 1;
-			accountList.add(account);
-			return 0;
-			}
-		// } catch (IllegalHandleException | InvalidHandleException e) {
-		// 	System.out.println("Error: " + e.getMessage());
-		// 	throw e;
-		// }
-	}
-
+		}
+		if (handle.isEmpty()) {
+			throw new InvalidHandleException("The handle cannot be empty");
+		} else if (handle.length() > 30) {
+			throw new InvalidHandleException("The handle cannot exceed 30 characters");
+		} else if (handle.contains(" ")) {
+			throw new InvalidHandleException("The handle cannot contain white spaces");
+		}
+		Accounts account = new Accounts(handle, description);
+		account.ID = accountList.size() + 1;
+		accountList.add(account);
+		return 0;
+		}
+		
 	@Override
-	public void removeAccount(int id){// throws AccountIDNotRecognisedException {		
+	public void removeAccount(int id) throws AccountIDNotRecognisedException {		
 		//removes all accounts where the account id matches the value passed into the function
-		accountList.removeIf(Account -> Account.ID == id);
+		//accountList.removeIf(Account -> Account.ID == id);
+		for (Accounts account : accountList) {
+			if (Integer.valueOf(account.getId()).equals(id)) {
+				accountList.remove(account);
+				return;
+			}
+		}
+		throw new AccountIDNotRecognisedException("The Id'" + id + "'is not recognised");
 	}
 
 	@Override
-	public void removeAccount(String handle) { // throws HandleNotRecognisedException {
-	
+	public void removeAccount(String handle) throws HandleNotRecognisedException {
 		//removes all accounts where the account handle matches the value passed into the function
-		accountList.removeIf(Account -> Account.Handle == handle);
-
+		//accountList.removeIf(Account -> Account.Handle == handle);
+		for (Accounts account : accountList) {
+			if (account.getHandle().equals(handle)) {
+				accountList.remove(account);
+				return;
+			}
+		}
+		throw new HandleNotRecognisedException("The handle '" + handle + "' is not recognised");
 	}
 	
 	@Override
-	public void changeAccountHandle(String oldHandle, String newHandle){
-			//throws HandleNotRecognisedException, IllegalHandleException, InvalidHandleException
-		for(Accounts account : accountList){
-			if(account.Handle == oldHandle){
+	public void changeAccountHandle(String oldHandle, String newHandle) throws HandleNotRecognisedException, IllegalHandleException, InvalidHandleException {
+		for (Accounts account : accountList) {
+			if (account.getHandle().equals(oldHandle)) {
+				for (Accounts account2 : accountList) {
+					if (account2.getHandle().equals(newHandle)) {
+						throw new IllegalHandleException("The handle '" + newHandle + "' is taken");
+					}
+				}
+				if (newHandle.isEmpty()) {
+					throw new InvalidHandleException("The handle cannot be empty");
+				} else if (newHandle.length() > 30) {
+					throw new InvalidHandleException("The handle cannot exceed 30 characters");
+				} else if (newHandle.contains(" ")) {
+					throw new InvalidHandleException("The handle cannot contain white spaces");
+				}
 				account.Handle = newHandle;
+			} else {
+				throw new HandleNotRecognisedException("The handle is not recognised");
 			}
 		}
 	}
@@ -123,7 +151,7 @@ public class BadSocialMedia implements SocialMediaPlatform {
 		{
 		for(Accounts account : accountList){
 			if(account.Handle == handle){
-				System.out.print("\n Account ID: " + account.ID +  "\n Account Handle: " + account.Handle + "\n Account Description:" +  account.Description + "\n");
+				System.out.print("\nAccount ID: " + account.ID +  "\nAccount Handle: " + account.Handle + "\nAccount Description: " +  account.Description + "\n");
 			}
 		}
 
@@ -144,7 +172,7 @@ public class BadSocialMedia implements SocialMediaPlatform {
 		}
 		post.postID = postList.size() + 1;
 		postList.add(post);
-		System.out.print("Post ID " + post.postID + "\n post messsage: " + post.postContent + "\n Account Handle: " + post.AccountHandleLink);
+		System.out.println("ID " + post.postID + "\nAccount: " + post.AccountHandleLink + "\n" + post.postContent + "\n");
 		return 0;
 	}
 
