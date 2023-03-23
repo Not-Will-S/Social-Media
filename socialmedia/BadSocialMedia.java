@@ -114,27 +114,31 @@ public class BadSocialMedia implements SocialMediaPlatform {
 	
 	@Override
 	public void changeAccountHandle(String oldHandle, String newHandle) throws HandleNotRecognisedException, IllegalHandleException, InvalidHandleException {
+		Accounts matchingAccount = null;
 		for (Accounts account : accountList) {
 			if (account.getHandle().equals(oldHandle)) {
-				for (Accounts account2 : accountList) {
-					if (account2.getHandle().equals(newHandle)) {
-						throw new IllegalHandleException("The handle '" + newHandle + "' is taken");
-					}
-				}
-				if (newHandle.isEmpty()) {
-					throw new InvalidHandleException("The handle cannot be empty");
-				} else if (newHandle.length() > 30) {
-					throw new InvalidHandleException("The handle cannot exceed 30 characters");
-				} else if (newHandle.contains(" ")) {
-					throw new InvalidHandleException("The handle cannot contain white spaces");
-				}
-				account.Handle = newHandle;
-			} else {
-				throw new HandleNotRecognisedException("The handle is not recognised");
+				matchingAccount = account;
+				break;
 			}
 		}
+		if (matchingAccount == null) {
+			throw new HandleNotRecognisedException("The handle is not recognised");
+		}
+		for (Accounts account : accountList) {
+			if (account.getHandle().equals(newHandle)) {
+				throw new IllegalHandleException("The handle '" + newHandle + "' is taken");
+			}
+		}
+		if (newHandle.isEmpty()) {
+			throw new InvalidHandleException("The handle cannot be empty");
+		} else if (newHandle.length() > 30) {
+			throw new InvalidHandleException("The handle cannot exceed 30 characters");
+		} else if (newHandle.contains(" ")) {
+			throw new InvalidHandleException("The handle cannot contain white spaces");
+		}
+		matchingAccount.Handle = newHandle;
 	}
-
+	
 	@Override
 	public void updateAccountDescription(String handle, String description) // throws HandleNotRecognisedException 
 	{

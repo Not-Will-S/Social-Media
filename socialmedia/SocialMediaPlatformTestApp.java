@@ -17,19 +17,21 @@ public class SocialMediaPlatformTestApp {
 		BadSocialMedia platform = new BadSocialMedia();
 		platform.createAccount("Handle","iwtkms");
 		platform.createAccount("Greg");
-		platform.createAccount("ertgh");
+		platform.createAccount("ertgh", "drgh");
+		platform.createAccount("sgfg");
 		//platform.createAccount("one");
 		//platform.createAccount("Handle", "iwtkms");
 		System.out.print(platform.accountList.size());
 		platform.createPost("Handle", "Birds aren't real");
 		platform.showAccount("Handle");
-		//platform.changeAccountHandle("Handle", "one");
+		platform.changeAccountHandle("Handle", "one");
+		platform.showAccount("one");
+		platform.updateAccountDescription("Greg", "newdesc");
 		// platform.showAccount("one");
-		// platform.updateAccountDescription("one", "newdesc");
-		// platform.showAccount("one");
-		// platform.removeAccount("one");
-		// platform.showAccount("one");
-		// platform.showAccount("Greg");
+		platform.removeAccount(1);
+		platform.showAccount("one");
+		platform.showAccount("Greg");
+		//platform.showAccount("ertgh");
 	}
 	
  
