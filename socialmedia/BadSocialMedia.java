@@ -16,30 +16,13 @@ public class BadSocialMedia implements SocialMediaPlatform {
 	public ArrayList<Endorsements> endorsementList = new ArrayList<Endorsements>();
 	public ArrayList<Comments>  commentList = new ArrayList<Comments>();
 
-	
-	
-	
 
-
-	
-	//Getter method so array can be accessed in other classes
+	//getter method so array can be accessed in other classes
 	public ArrayList<Accounts> getMyArray(){
 		return accountList;
 	}
 
 	@Override
-	// public int createAccount(String handle) throws IllegalHandleException, InvalidHandleException {
-	// 	// TODO Auto-generated method stub
-		
-	// 	Accounts account = new Accounts("hand", "Desc");
-	// 	account.ID = accountList.size() + 1;	
-	// 	//System.out.print("ID = " + account.ID + " Handle = " + account.Handle + " Description = " + account.Description);
-	// 	accountList.add(account);
-	// 	Accounts account1 = new Accounts("Handle", "Description");
-	// 	account1.ID = accountList.size() + 1;
-	// 	accountList.add(account1);		
-	// 	return 0;
-	//}
 	public int createAccount(String handle) throws IllegalHandleException, InvalidHandleException{
 		//adds account for testing
 		Accounts TestAcc = new Accounts("HandleTest", "DescTest", 1);
@@ -50,7 +33,7 @@ public class BadSocialMedia implements SocialMediaPlatform {
 				throw new IllegalHandleException("The handle '" + handle + "' is taken");
 			}
 		}
-		if (handle.isEmpty()) {
+		if (handle.trim().isEmpty()) {
 			throw new InvalidHandleException("The handle cannot be empty");
 		} else if (handle.length() > 30) {
 			throw new InvalidHandleException("The handle cannot exceed 30 characters");
@@ -59,7 +42,7 @@ public class BadSocialMedia implements SocialMediaPlatform {
 		}
 		//instantiates Accounts to create a new object
 		Accounts account = new Accounts(handle);
-		//Finds what the next account ID should be by finding the total number of accounts and incrementing it
+		//finds what the next account ID should be by finding the total number of accounts and incrementing it
 		account.ID = accountList.size() + 1;
 		//adds account object
 		accountList.add(account);
@@ -73,7 +56,7 @@ public class BadSocialMedia implements SocialMediaPlatform {
 				throw new IllegalHandleException("The handle '" + handle + "' is taken");
 			}
 		}
-		if (handle.isEmpty()) {
+		if (handle.trim().isEmpty()) {
 			throw new InvalidHandleException("The handle cannot be empty");
 		} else if (handle.length() > 30) {
 			throw new InvalidHandleException("The handle cannot exceed 30 characters");
@@ -89,7 +72,6 @@ public class BadSocialMedia implements SocialMediaPlatform {
 	@Override
 	public void removeAccount(int id) throws AccountIDNotRecognisedException {		
 		//removes all accounts where the account id matches the value passed into the function
-		//accountList.removeIf(Account -> Account.ID == id);
 		for (Accounts account : accountList) {
 			if (Integer.valueOf(account.getId()).equals(id)) {
 				accountList.remove(account);
@@ -102,7 +84,6 @@ public class BadSocialMedia implements SocialMediaPlatform {
 	@Override
 	public void removeAccount(String handle) throws HandleNotRecognisedException {
 		//removes all accounts where the account handle matches the value passed into the function
-		//accountList.removeIf(Account -> Account.Handle == handle);
 		for (Accounts account : accountList) {
 			if (account.getHandle().equals(handle)) {
 				accountList.remove(account);
@@ -122,14 +103,14 @@ public class BadSocialMedia implements SocialMediaPlatform {
 			}
 		}
 		if (matchingAccount == null) {
-			throw new HandleNotRecognisedException("The handle is not recognised");
+			throw new HandleNotRecognisedException("The handle '" + oldHandle + "' is not recognised");
 		}
 		for (Accounts account : accountList) {
 			if (account.getHandle().equals(newHandle)) {
 				throw new IllegalHandleException("The handle '" + newHandle + "' is taken");
 			}
 		}
-		if (newHandle.isEmpty()) {
+		if (newHandle.trim().isEmpty()) {
 			throw new InvalidHandleException("The handle cannot be empty");
 		} else if (newHandle.length() > 30) {
 			throw new InvalidHandleException("The handle cannot exceed 30 characters");
@@ -140,59 +121,71 @@ public class BadSocialMedia implements SocialMediaPlatform {
 	}
 	
 	@Override
-	public void updateAccountDescription(String handle, String description) // throws HandleNotRecognisedException 
-	{
+	public void updateAccountDescription(String handle, String description) throws HandleNotRecognisedException {
 		for(Accounts account : accountList){
 			if(account.Handle == handle){
 				account.Description = description;
+				return;
 			}
 		}
-
+		throw new HandleNotRecognisedException("The handle '" + handle + "' is not recognised");
 	}
 
 	@Override
-	public String showAccount(String handle) //throws HandleNotRecognisedException 
-		{
+	public String showAccount(String handle) throws HandleNotRecognisedException {
+		Accounts matchingAccount = null;
 		for(Accounts account : accountList){
-			if(account.Handle == handle){
-				System.out.print("\nAccount ID: " + account.ID +  "\nAccount Handle: " + account.Handle + "\nAccount Description: " +  account.Description + "\n");
+			if (account.getHandle().equals(handle)) {
+				matchingAccount = account;
+				System.out.print("\nID: " + account.ID +  "\nHandle: " + account.Handle + "\nDescription: " +  account.Description + "\n");
 			}
 		}
-
-
-	
+		if (matchingAccount == null) {
+			throw new HandleNotRecognisedException("The handle '" + handle + "' is not recognised");
+		}
 		return null;
 	}
 
 	@Override
-	public int createPost(String handle, String message) //throws HandleNotRecognisedException, InvalidPostException 
-	{
+	public int createPost(String handle, String message) throws HandleNotRecognisedException, InvalidPostException {
+		Accounts matchingAccount = null;
 		Posts post = new Posts(message);
 		post.AccountHandleLink = handle;
 		for (Accounts account : accountList){
-			if(account.Handle == handle){
+			if(account.getHandle().equals(handle)){
+				if (message.trim().isEmpty()) {
+					throw new InvalidPostException("The message cannot be empty");
+				} else if (message.length() > 100) {
+					throw new InvalidPostException("The message cannot exceed 100 characters");
+				}
+				matchingAccount = account;
 				post.postID = account.ID;
+				post.postID = postList.size() + 1;
+				postList.add(post);
+				System.out.println("ID: " + post.postID + "\nAccount: " + post.AccountHandleLink + "\n" + post.postContent + "\n");
 			}
 		}
-		post.postID = postList.size() + 1;
-		postList.add(post);
-		System.out.println("ID " + post.postID + "\nAccount: " + post.AccountHandleLink + "\n" + post.postContent + "\n");
+		if (matchingAccount == null) {
+			throw new HandleNotRecognisedException("The handle '" + handle + "' is not recognised");
+		}
 		return 0;
 	}
 
-	
+	//***need to work out a way to display id and handle of endorsing account like its a post and the endorseBody is the message within
 	String endorseBody;
 	@Override
-	public int endorsePost(String handle, int id){
-			//throws HandleNotRecognisedException, PostIDNotRecognisedException, NotActionablePostException {
-			
-		    Endorsements endorsePost = new Endorsements(id, handle);
-			endorsementList.add(endorsePost);
-			for (Posts post : postList){
-				if(post.postID == id){
-					endorseBody = "EP@" + handle + ": " + post.postContent;
-				}
+	public int endorsePost(String handle, int id){ //throws HandleNotRecognisedException, PostIDNotRecognisedException, NotActionablePostException {
+		Endorsements endorsePost = new Endorsements(id, handle);
+		endorsementList.add(endorsePost);
+		String endorsedHandle = null; //initialise to null
+		for (Posts post : postList){
+			if(post.postID == id){
+				endorsedHandle = post.AccountHandleLink; //assign the handle of the account being endorsed
+				endorseBody = "\nEP@" + endorsedHandle + ": " + post.postContent;
+				System.out.println(endorseBody);
 			}
+		}
+		
 		return 0;
 	}
 

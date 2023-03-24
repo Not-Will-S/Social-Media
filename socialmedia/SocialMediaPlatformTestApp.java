@@ -13,7 +13,7 @@ import java.util.ArrayList;
  */
 public class SocialMediaPlatformTestApp {
 	public static void main(String[] args) throws IllegalHandleException, InvalidHandleException, 
-	HandleNotRecognisedException, AccountIDNotRecognisedException{
+	HandleNotRecognisedException, AccountIDNotRecognisedException, InvalidPostException{
 		BadSocialMedia platform = new BadSocialMedia();
 		platform.createAccount("Handle","iwtkms");
 		platform.createAccount("Greg");
@@ -21,16 +21,18 @@ public class SocialMediaPlatformTestApp {
 		platform.createAccount("sgfg");
 		//platform.createAccount("one");
 		//platform.createAccount("Handle", "iwtkms");
-		System.out.print(platform.accountList.size());
+		//System.out.print(platform.accountList.size());
 		platform.createPost("Handle", "Birds aren't real");
+		platform.showAccount("Greg");
 		platform.showAccount("Handle");
 		platform.changeAccountHandle("Handle", "one");
 		platform.showAccount("one");
 		platform.updateAccountDescription("Greg", "newdesc");
 		// platform.showAccount("one");
 		platform.removeAccount(1);
-		platform.showAccount("one");
+		//platform.showAccount("one");
 		platform.showAccount("Greg");
+		platform.endorsePost("Greg", 1);
 		//platform.showAccount("ertgh");
 	}
 	
