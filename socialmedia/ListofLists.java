@@ -1,4 +1,4 @@
-package socialmedia
+package socialmedia;
 import java.io.Serializable;
 import java.util.ArrayList;
 
@@ -9,10 +9,14 @@ public class ListofLists implements Serializable {
     public ArrayList<Comments> commentArray;
     public ArrayList<Endorsements> endorseArray;
 
-    public ListsObject(ArrayList<Posts> postsArray, ArrayList<Accounts> accountArray, ArrayList<Comments> commentArray, ArrayList<Endorsements> endorseArray) {
+    public ListofLists(){
+        
+    }
+
+    public ListofLists(ArrayList<Posts> postsArray, ArrayList<Accounts> accountArray, ArrayList<Comments> commentArray, ArrayList<Endorsements> endorseArray) {
         this.postsArray = postsArray;
         this.accountArray = accountArray;
-        this.commnetArray = commentArray;
+        this.commentArray = commentArray;
         this.endorseArray = endorseArray;
     }
 }

@@ -1,12 +1,11 @@
 package socialmedia;
-import java.security.PublicKey;
-import java.util.ArrayList;
-
-public class Accounts{
+import java.io.Serializable;
+public class Accounts implements Serializable{
     //Class attributes 
     public int ID; // ID will increment from 1 upwards
     public String Handle; // Handle is the name of account
     public String Description; // Description stores a short description of the account
+    private static final long serialVersionUID = 1L;
 
 
     //This is the constructor for accounts with only the handle

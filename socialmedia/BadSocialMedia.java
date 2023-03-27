@@ -15,7 +15,7 @@ import java.io.FileNotFoundException;
  * @version 1.0
  */
 //public class BadSocialMedia implements SocialMediaPlatform {
-  public class BadSocialMedia implements SocialMediaPlatform {
+  public class BadSocialMedia implements SocialMediaPlatform, Serializable {
 	public ArrayList<Accounts> accountList = new ArrayList<Accounts>();
 	public ArrayList<Posts> postList = new ArrayList<Posts>();
 	public ArrayList<Endorsements> endorsementList = new ArrayList<Endorsements>();
@@ -350,8 +350,25 @@ import java.io.FileNotFoundException;
 			
 		// }
 
-		ListofLists largeList = new ListofLists()
-
+		ListofLists largeList = new ListofLists(postList, accountList, commentList, endorsementList);
+        // Create a file output stream to write the serialized object to a file
+		try{
+		FileOutputStream fileOut = new FileOutputStream(filename + ".ser");
+		ObjectOutputStream out = new ObjectOutputStream(fileOut);
+		out.writeObject(largeList);
+         
+		// Close the output streams
+		out.close();
+		fileOut.close();
+		}
+		catch(FileNotFoundException e){
+			System.out.print("Invalid filename provided");
+		}
+		catch(IOException e){
+			System.out.print("IO error");
+		}
+		// Create an object output stream to serialize the object to the file output stream
+		
 
 
 
@@ -362,36 +379,60 @@ import java.io.FileNotFoundException;
 
 	String hold;
 	@Override
-	public void loadPlatform(String filename) throws IOException, ClassNotFoundException {
-		Scanner scanner = new Scanner(new File(filename));
+	 public void loadPlatform(String filename) //throws IOException, ClassNotFoundException {
+	{
+	// 	Scanner scanner = new Scanner(new File(filename));
 
-		while (scanner.hasNextLine()) {
-			Posts post = new Posts();
-			hold = scanner.nextLine();
-			if (hold.equals("[PostData]")) {
-				while (scanner.hasNextLine()) {
-					hold = scanner.nextLine();
-					if (hold.isEmpty()) {
-						break;
-					}
-					String holdArr[] = hold.split(",");
-					post.postID = Integer.parseInt(holdArr[0]);
-					post.postContent = holdArr[1];
-					post.AccountHandleLink = holdArr[2];
-					postList.add(post);
-					Arrays.fill(holdArr, null);
-				}
+	// 	while (scanner.hasNextLine()) {
+	// 		Posts post = new Posts();
+	// 		hold = scanner.nextLine();
+	// 		if (hold.equals("[PostData]")) {
+	// 			while (scanner.hasNextLine()) {
+	// 				hold = scanner.nextLine();
+	// 				if (hold.isEmpty()) {
+	// 					break;
+	// 				}
+	// 				String holdArr[] = hold.split(",");
+	// 				post.postID = Integer.parseInt(holdArr[0]);
+	// 				post.postContent = holdArr[1];
+	// 				post.AccountHandleLink = holdArr[2];
+	// 				postList.add(post);
+	// 				Arrays.fill(holdArr, null);
+	// 			}
 				
-			} else if (hold.equals("[CommentData]")) {
-				while (scanner.hasNextLine()) {
-					hold = scanner.nextLine();
-					if (hold.isEmpty()) {
-						break;
-					}
-					data2.add(Integer.parseInt(line));
-				}
-			}
+	// 		} else if (hold.equals("[CommentData]")) {
+	// 			while (scanner.hasNextLine()) {
+	// 				hold = scanner.nextLine();
+	// 				if (hold.isEmpty()) {
+	// 					break;
+	// 				}
+	// 				data2.add(Integer.parseInt(line));
+	// 			}
+	// 		}
 
-	}
-	}
+	// }
+		try {
+			// Open the serialized file for reading
+			FileInputStream fileIn = new FileInputStream(filename + ".ser");
+			// Create an object input stream to deserialize the object from the file input stream
+			ObjectInputStream in = new ObjectInputStream(fileIn);
+		
+			// Read the serialized object from the file
+			ListofLists listsObject = (ListofLists) in.readObject();
+		
+			// Close the input streams
+			in.close();
+			fileIn.close();
+		
+			// Separate the data back out into the original ArrayLists
+			postList = listsObject.postsArray;
+			accountList = listsObject.accountArray;
+			commentList = listsObject.commentArray;
+			endorsementList = listsObject.endorseArray;
+		
+		
+		 } catch (IOException | ClassNotFoundException e) {
+			e.printStackTrace();
+	 	}
+  	}	
 }

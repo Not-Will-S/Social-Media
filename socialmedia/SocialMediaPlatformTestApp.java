@@ -1,4 +1,5 @@
 package socialmedia;
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
@@ -11,7 +12,7 @@ import java.util.ArrayList;
  * @author Diogo Pacheco
  * @version 1.0
  */
-public class SocialMediaPlatformTestApp {
+public class SocialMediaPlatformTestApp implements Serializable {
 	public static void main(String[] args) throws IllegalHandleException, InvalidHandleException, 
 	HandleNotRecognisedException, AccountIDNotRecognisedException, InvalidPostException{
 		BadSocialMedia platform = new BadSocialMedia();
@@ -36,17 +37,21 @@ public class SocialMediaPlatformTestApp {
 		// platform.endorsePost("Greg", 1);
 		// //platform.showAccount("ertgh");
 
-		platform.createAccount("Greggy");
-		platform.createAccount("Willy");
-		platform.createPost("Greggy", "Drew has a foot fetish");
-		platform.createPost("Willy", "wow, no way");
-		platform.endorsePost("Greggy", 2);
-		platform.endorsePost("Willy", 1);
-		platform.commentPost("Greggy", 1 , "Forreall");
-		platform.commentPost("Willy", 2, "Forsure");
+		//Please dont delete below me **************************************************************************************************
+		// platform.createAccount("Greggy");
+		// platform.createAccount("Willy");
+		// platform.createPost("Greggy", "Drew has a foot fetish");
+		// platform.createPost("Willy", "wow, no way");
+		// platform.endorsePost("Greggy", 2);
+		// platform.endorsePost("Willy", 1);
+		// platform.commentPost("Greggy", 1 , "Forreall");
+		// platform.commentPost("Willy", 2, "Forsure");
 
-		platform.savePlatform("Test");
+		platform.loadPlatform("Test");
+		for(Posts post : platform.postList){
+			System.out.print(post.postID);
 
+		}
 	}
 	
  

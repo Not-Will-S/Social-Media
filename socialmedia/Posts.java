@@ -1,8 +1,12 @@
 package socialmedia;
-public class Posts {
+
+import java.io.Serializable;
+
+public class Posts implements Serializable{
     public int postID;
     public String postContent; 
     public String AccountHandleLink;
+    private static final long serialVersionUID = 1L;
 
     public Posts(){  
     }
@@ -18,7 +22,7 @@ public class Posts {
 
     }
 }
-    class Endorsements extends Posts{
+    class Endorsements extends Posts implements Serializable{
         public int endorsedPostId;
         public String endorseAccHandle;
         public String endorsementBody;
@@ -31,7 +35,7 @@ public class Posts {
         }
     }
 
-    class Comments extends Posts{
+    class Comments extends Posts implements Serializable{
         public int commentId;
         public String commentHandle; 
         public int commentPostId;
