@@ -1,8 +1,12 @@
 package socialmedia;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.Arrays;
 import java.io.IOException;
-
+import java.io.PrintWriter;
+import java.util.Scanner;
+import java.io.*;
+import java.io.FileNotFoundException;
 /**
  * BadSocialMedia is a minimally compiling, but non-functioning implementor of
  * the SocialMediaPlatform interface.
@@ -10,7 +14,8 @@ import java.io.IOException;
  * @author Diogo Pacheco
  * @version 1.0
  */
-public class BadSocialMedia implements SocialMediaPlatform {
+//public class BadSocialMedia implements SocialMediaPlatform {
+  public class BadSocialMedia implements SocialMediaPlatform {
 	public ArrayList<Accounts> accountList = new ArrayList<Accounts>();
 	public ArrayList<Posts> postList = new ArrayList<Posts>();
 	public ArrayList<Endorsements> endorsementList = new ArrayList<Endorsements>();
@@ -186,7 +191,7 @@ public class BadSocialMedia implements SocialMediaPlatform {
 			}
 		}
 		
-		return 0;
+		return 0; 
 	}
 
 	@Override
@@ -278,8 +283,8 @@ public class BadSocialMedia implements SocialMediaPlatform {
 	int highEndorsed;
 	@Override
 	public int getMostEndorsedAccount() {
-		//for every account get a list of every post made
-		//for every post get a list of every endorsement made and store it in a counter
+		//for every account get a list of every post made by that account
+		//for every post get a list of every endorsement made relevant to the post and store it in a counter
 		//compare after
 		for(Accounts account : accountList){ //loops through every account
 			for(Posts post : postList){//Loops through every post for every account
@@ -310,15 +315,83 @@ public class BadSocialMedia implements SocialMediaPlatform {
 	}
 
 	@Override
-	public void savePlatform(String filename) throws IOException {
-		// TODO Auto-generated method stub
+	public void savePlatform(String filename) //throws IOException {
+		{
+		// try{
+		// PrintWriter writer = new PrintWriter(filename);
+		// // *************Need to store each value in speech marks to avoid the issue of extra commas in the CSV file
+		
+		// // Write the posts to file
+		// writer.println("[PostData]");
+		// for (Posts post : postList) {
+		// 	writer.println(post.postID + "," + post.postContent + "," + post.AccountHandleLink);
+		// }
+		// writer.println();
+		
+		// writer.println("[CommentData]");
+		// for (Comments comment : commentList) {
+		// writer.println(comment.commentId + "," + comment.commentHandle + "," + comment.commentPostId + "," + comment.commentBody);
+		// }
+		// writer.println();
+
+		// writer.println("[AccountData]]");
+		// for (Accounts account : accountList) {
+		// writer.println(account.ID + "," + account.Handle + "," + account.Description);
+		// }
+		// writer.println();
+		
+		// writer.println("[EndorsementData]");
+		// for (Endorsements endorsement : endorsementList) {
+		// 	writer.println(endorsement.endorsedPostId + "," + endorsement.endorseAccHandle);
+		// }
+		// writer.close();
+		// }catch(FileNotFoundException e){
+		// 	System.out.print("File not found");
+			
+		// }
+
+		ListofLists largeList = new ListofLists()
+
+
+
+
+
+
 
 	}
 
+	String hold;
 	@Override
 	public void loadPlatform(String filename) throws IOException, ClassNotFoundException {
-		// TODO Auto-generated method stub
+		Scanner scanner = new Scanner(new File(filename));
+
+		while (scanner.hasNextLine()) {
+			Posts post = new Posts();
+			hold = scanner.nextLine();
+			if (hold.equals("[PostData]")) {
+				while (scanner.hasNextLine()) {
+					hold = scanner.nextLine();
+					if (hold.isEmpty()) {
+						break;
+					}
+					String holdArr[] = hold.split(",");
+					post.postID = Integer.parseInt(holdArr[0]);
+					post.postContent = holdArr[1];
+					post.AccountHandleLink = holdArr[2];
+					postList.add(post);
+					Arrays.fill(holdArr, null);
+				}
+				
+			} else if (hold.equals("[CommentData]")) {
+				while (scanner.hasNextLine()) {
+					hold = scanner.nextLine();
+					if (hold.isEmpty()) {
+						break;
+					}
+					data2.add(Integer.parseInt(line));
+				}
+			}
 
 	}
-
+	}
 }

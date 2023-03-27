@@ -1,0 +1,17 @@
+[PostData]
+1,Drew has a foot fetish,Greggy
+2,wow, no way,Willy
+
+[CommentData]
+1,Greggy,1,Forreall
+2,Willy,2,Forsure
+
+[AccountData]
+1,HandleTest,DescTest
+2,Greggy,null
+1,HandleTest,DescTest
+4,Willy,null
+
+[EndorsementData]
+2,Greggy
+1,Willy

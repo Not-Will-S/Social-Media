@@ -15,25 +15,38 @@ public class SocialMediaPlatformTestApp {
 	public static void main(String[] args) throws IllegalHandleException, InvalidHandleException, 
 	HandleNotRecognisedException, AccountIDNotRecognisedException, InvalidPostException{
 		BadSocialMedia platform = new BadSocialMedia();
-		platform.createAccount("Handle","iwtkms");
-		platform.createAccount("Greg");
-		platform.createAccount("ertgh", "drgh");
-		platform.createAccount("sgfg");
-		//platform.createAccount("one");
-		//platform.createAccount("Handle", "iwtkms");
-		//System.out.print(platform.accountList.size());
-		platform.createPost("Handle", "Birds aren't real");
-		platform.showAccount("Greg");
-		platform.showAccount("Handle");
-		platform.changeAccountHandle("Handle", "one");
-		platform.showAccount("one");
-		platform.updateAccountDescription("Greg", "newdesc");
+		//Sorry need to borrow the testspace :P
+		// platform.createAccount("Handle","iwtkms");
+		// platform.createAccount("Greg");
+		// platform.createAccount("ertgh", "drgh");
+		// platform.createAccount("sgfg");
+		// //platform.createAccount("one");
+		// //platform.createAccount("Handle", "iwtkms");
+		// //System.out.print(platform.accountList.size());
+		// platform.createPost("Handle", "Birds aren't real");
+		// platform.showAccount("Greg");
+		// platform.showAccount("Handle");
+		// platform.changeAccountHandle("Handle", "one");
 		// platform.showAccount("one");
-		platform.removeAccount(1);
-		//platform.showAccount("one");
-		platform.showAccount("Greg");
-		platform.endorsePost("Greg", 1);
-		//platform.showAccount("ertgh");
+		// platform.updateAccountDescription("Greg", "newdesc");
+		// // platform.showAccount("one");
+		// platform.removeAccount(1);
+		// //platform.showAccount("one");
+		// platform.showAccount("Greg");
+		// platform.endorsePost("Greg", 1);
+		// //platform.showAccount("ertgh");
+
+		platform.createAccount("Greggy");
+		platform.createAccount("Willy");
+		platform.createPost("Greggy", "Drew has a foot fetish");
+		platform.createPost("Willy", "wow, no way");
+		platform.endorsePost("Greggy", 2);
+		platform.endorsePost("Willy", 1);
+		platform.commentPost("Greggy", 1 , "Forreall");
+		platform.commentPost("Willy", 2, "Forsure");
+
+		platform.savePlatform("Test");
+
 	}
 	
  
