@@ -1,5 +1,7 @@
 package socialmedia;
 
+import java.io.Serializable;
+
 /**
  * Thrown when attempting to use an account handle that does not exit in the
  * system.
@@ -8,7 +10,7 @@ package socialmedia;
  * @version 1.0
  *
  */
-public class HandleNotRecognisedException extends Exception {
+public class HandleNotRecognisedException extends Exception implements Serializable {
 
 	/**
 	 * Constructs an instance of the exception with no message

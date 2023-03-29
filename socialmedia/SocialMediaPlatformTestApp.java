@@ -47,11 +47,21 @@ public class SocialMediaPlatformTestApp implements Serializable {
 		// platform.commentPost("Greggy", 1 , "Forreall");
 		// platform.commentPost("Willy", 2, "Forsure");
 
-		platform.loadPlatform("Test");
-		for(Posts post : platform.postList){
-			System.out.print(post.postID);
+		// platform.loadPlatform("Test");
+		// for(Posts post : platform.postList){
+		// 	System.out.print(post.postID);
+		// }
+		//platform.savePlatform("Test");
+		platform.loadPlatform("Test.ser");
+		System.out.print(platform.accountList.size());
+		System.out.print(platform.endorsementList.size());
+		System.out.print(platform.commentList.size());
+		System.out.print(platform.postList.size());
+		// for(Accounts account : platform.accountList){
+		// 	System.out.print(account.Handle);
+		// }
 
-		}
+
 	}
 	
  

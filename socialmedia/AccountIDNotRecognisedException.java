@@ -1,5 +1,7 @@
 package socialmedia;
 
+import java.io.Serializable;
+
 /**
  * Thrown when attempting to use an account ID that does not exit in the system.
  * 
@@ -7,7 +9,7 @@ package socialmedia;
  * @version 1.0
  *
  */
-public class AccountIDNotRecognisedException extends Exception {
+public class AccountIDNotRecognisedException extends Exception implements Serializable{
 
 	/**
 	 * Constructs an instance of the exception with no message

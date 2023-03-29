@@ -1,5 +1,7 @@
 package socialmedia;
 
+import java.io.Serializable;
+
 /**
  * Thrown when attempting to act upon an not-actionable post.
  * 
@@ -7,7 +9,7 @@ package socialmedia;
  * @version 1.0
  *
  */
-public class NotActionablePostException extends Exception {
+public class NotActionablePostException extends Exception implements Serializable{
 
 	/**
 	 * Constructs an instance of the exception with no message

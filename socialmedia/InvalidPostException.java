@@ -1,5 +1,7 @@
 package socialmedia;
 
+import java.io.Serializable;
+
 /**
  * Thrown when attempting to create a post which the message is empty or has
  * more characters than the system's limit.
@@ -8,7 +10,7 @@ package socialmedia;
  * @version 1.0
  *
  */
-public class InvalidPostException extends Exception {
+public class InvalidPostException extends Exception implements Serializable{
 
 	/**
 	 * Constructs an instance of the exception with no message

@@ -2,6 +2,7 @@ package socialmedia;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Arrays;
+import java.io.Serializable;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Scanner;
@@ -30,9 +31,6 @@ import java.io.FileNotFoundException;
 	@Override
 	public int createAccount(String handle) throws IllegalHandleException, InvalidHandleException{
 		//adds account for testing
-		Accounts TestAcc = new Accounts("HandleTest", "DescTest", 1);
-		accountList.add(TestAcc);
-		
 		for (Accounts account : accountList) {
 			if (account.getHandle().equals(handle)) {
 				throw new IllegalHandleException("The handle '" + handle + "' is taken");
@@ -317,39 +315,6 @@ import java.io.FileNotFoundException;
 	@Override
 	public void savePlatform(String filename) //throws IOException {
 		{
-		// try{
-		// PrintWriter writer = new PrintWriter(filename);
-		// // *************Need to store each value in speech marks to avoid the issue of extra commas in the CSV file
-		
-		// // Write the posts to file
-		// writer.println("[PostData]");
-		// for (Posts post : postList) {
-		// 	writer.println(post.postID + "," + post.postContent + "," + post.AccountHandleLink);
-		// }
-		// writer.println();
-		
-		// writer.println("[CommentData]");
-		// for (Comments comment : commentList) {
-		// writer.println(comment.commentId + "," + comment.commentHandle + "," + comment.commentPostId + "," + comment.commentBody);
-		// }
-		// writer.println();
-
-		// writer.println("[AccountData]]");
-		// for (Accounts account : accountList) {
-		// writer.println(account.ID + "," + account.Handle + "," + account.Description);
-		// }
-		// writer.println();
-		
-		// writer.println("[EndorsementData]");
-		// for (Endorsements endorsement : endorsementList) {
-		// 	writer.println(endorsement.endorsedPostId + "," + endorsement.endorseAccHandle);
-		// }
-		// writer.close();
-		// }catch(FileNotFoundException e){
-		// 	System.out.print("File not found");
-			
-		// }
-
 		ListofLists largeList = new ListofLists(postList, accountList, commentList, endorsementList);
         // Create a file output stream to write the serialized object to a file
 		try{
@@ -367,72 +332,29 @@ import java.io.FileNotFoundException;
 		catch(IOException e){
 			System.out.print("IO error");
 		}
-		// Create an object output stream to serialize the object to the file output stream
-		
-
-
-
-
-
-
 	}
 
 	String hold;
 	@Override
 	 public void loadPlatform(String filename) //throws IOException, ClassNotFoundException {
 	{
-	// 	Scanner scanner = new Scanner(new File(filename));
-
-	// 	while (scanner.hasNextLine()) {
-	// 		Posts post = new Posts();
-	// 		hold = scanner.nextLine();
-	// 		if (hold.equals("[PostData]")) {
-	// 			while (scanner.hasNextLine()) {
-	// 				hold = scanner.nextLine();
-	// 				if (hold.isEmpty()) {
-	// 					break;
-	// 				}
-	// 				String holdArr[] = hold.split(",");
-	// 				post.postID = Integer.parseInt(holdArr[0]);
-	// 				post.postContent = holdArr[1];
-	// 				post.AccountHandleLink = holdArr[2];
-	// 				postList.add(post);
-	// 				Arrays.fill(holdArr, null);
-	// 			}
-				
-	// 		} else if (hold.equals("[CommentData]")) {
-	// 			while (scanner.hasNextLine()) {
-	// 				hold = scanner.nextLine();
-	// 				if (hold.isEmpty()) {
-	// 					break;
-	// 				}
-	// 				data2.add(Integer.parseInt(line));
-	// 			}
-	// 		}
-
-	// }
-		try {
-			// Open the serialized file for reading
-			FileInputStream fileIn = new FileInputStream(filename + ".ser");
-			// Create an object input stream to deserialize the object from the file input stream
-			ObjectInputStream in = new ObjectInputStream(fileIn);
-		
-			// Read the serialized object from the file
-			ListofLists listsObject = (ListofLists) in.readObject();
-		
-			// Close the input streams
-			in.close();
-			fileIn.close();
-		
-			// Separate the data back out into the original ArrayLists
-			postList = listsObject.postsArray;
-			accountList = listsObject.accountArray;
-			commentList = listsObject.commentArray;
-			endorsementList = listsObject.endorseArray;
-		
-		
-		 } catch (IOException | ClassNotFoundException e) {
-			e.printStackTrace();
-	 	}
+	try {
+		FileInputStream fileIn = new FileInputStream(filename);
+		ObjectInputStream objectIn = new ObjectInputStream(fileIn);
+	
+		ListofLists listOfLists = (ListofLists) objectIn.readObject();
+	
+		objectIn.close();
+		fileIn.close();
+	
+		accountList = listOfLists.getAccountList();
+		endorsementList = listOfLists.getEndorsementList();
+		commentList = listOfLists.getCommentList();
+		postList = listOfLists.getPostList();
+	
+	} catch (IOException | ClassNotFoundException e) {
+		e.printStackTrace();
+	}
+	
   	}	
 }

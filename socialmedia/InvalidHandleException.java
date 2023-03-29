@@ -1,5 +1,7 @@
 package socialmedia;
 
+import java.io.Serializable;
+
 /**
  * Thrown when attempting to assign an account handle empty or having more than
  * the system limit of characters. A handle must be a single word, i.e., no
@@ -9,7 +11,7 @@ package socialmedia;
  * @version 1.0
  *
  */
-public class InvalidHandleException extends Exception {
+public class InvalidHandleException extends Exception implements Serializable{
 
 	/**
 	 * Constructs an instance of the exception with no message

@@ -1,5 +1,7 @@
 package socialmedia;
 
+import java.io.Serializable;
+
 /**
  * Thrown when attempting to assign an account handle already in use in the
  * system.
@@ -8,7 +10,7 @@ package socialmedia;
  * @version 1.0
  *
  */
-public class IllegalHandleException extends Exception {
+public class IllegalHandleException extends Exception implements Serializable{
 
 	/**
 	 * Constructs an instance of the exception with no message
