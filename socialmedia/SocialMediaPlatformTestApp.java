@@ -60,7 +60,7 @@ public class SocialMediaPlatformTestApp implements Serializable {
 		// for(Accounts account : platform.accountList){
 		// 	System.out.print(account.Handle);
 		// }
-
+		platform.showIndividualPost(1);
 
 	}
 	

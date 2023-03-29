@@ -217,17 +217,40 @@ import java.io.FileNotFoundException;
 		//Need to create logic for changing comments to default message but ionwanna cos it sounds hard - do later
 			
 	}
-
+	
+	
+	int postEndorseNo;
+	int postCommentsNo;
 	@Override
-	public String showIndividualPost(int id) throws PostIDNotRecognisedException {
-		// TODO Auto-generat
+	public String showIndividualPost(int id) //throws PostIDNotRecognisedException 
+	{
+		for(Endorsements endorse : endorsementList){
+			if(endorse.endorsedPostId == id)
+			postEndorseNo ++;
+		}
+
+		for(Comments comment : commentList){
+			if(comment.commentPostId == id){
+				postCommentsNo ++;
+			}
+		}
+
+		for(Posts post : postList){
+			if(post.postID == id){
+				System.out.print("ID:" + post.postID + "\nAccount:" + post.AccountHandleLink + "\nNo. Endorsements: " + postEndorseNo + "\nNo. Comments: " + postCommentsNo + "\n" + post.postContent);
+			}
+		}
+
+
+
+
 		return null;
 	}
 
 	@Override
 	public StringBuilder showPostChildrenDetails(int id)
 			throws PostIDNotRecognisedException, NotActionablePostException {
-		// TODO Auto-generated method stub
+	
 		return null;
 	}
 

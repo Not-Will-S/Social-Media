@@ -2,6 +2,8 @@ package socialmedia;
 
 import java.io.Serializable;
 
+import org.w3c.dom.css.Counter;
+
 public class Posts implements Serializable{
     public int postID;
     public String postContent; 
@@ -20,6 +22,27 @@ public class Posts implements Serializable{
     public Posts(String postContent){
         this.postContent = postContent;       
 
+    }
+    int Counter;
+    BadSocialMedia platform = new BadSocialMedia();
+    public int getNoEndorsements(){
+        Counter = 0;
+        for(Endorsements endorsement : platform.endorsementList){
+            if(endorsement.postID == this.postID){
+                Counter ++;
+            }
+        }
+        return Counter;
+    }
+    
+    public int getNoComments(){
+        Counter = 0;
+        for(Comments comment : platform.commentList){
+            if(comment.commentPostId == this.postID){
+                Counter ++;
+            }
+        }
+        return Counter;
     }
 }
     class Endorsements extends Posts implements Serializable{
