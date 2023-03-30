@@ -33,9 +33,11 @@ import java.io.FileNotFoundException;
 		//adds account for testing
 		for (Accounts account : accountList) {
 			if (account.getHandle().equals(handle)) {
+				// gives exception if handle is reocgnised 
 				throw new IllegalHandleException("The handle '" + handle + "' is taken");
 			}
 		}
+		// gives exception if handle does not meet requirements
 		if (handle.trim().isEmpty()) {
 			throw new InvalidHandleException("The handle cannot be empty");
 		} else if (handle.length() > 30) {
@@ -66,6 +68,7 @@ import java.io.FileNotFoundException;
 		} else if (handle.contains(" ")) {
 			throw new InvalidHandleException("The handle cannot contain white spaces");
 		}
+		//instantiates Accounts to create a new object with a description
 		Accounts account = new Accounts(handle, description);
 		account.ID = accountList.size() + 1;
 		accountList.add(account);
@@ -81,7 +84,7 @@ import java.io.FileNotFoundException;
 				return;
 			}
 		}
-		throw new AccountIDNotRecognisedException("The Id'" + id + "'is not recognised");
+		throw new AccountIDNotRecognisedException("The Id'" + id + "'was not recognised");
 	}
 
 	@Override
@@ -93,7 +96,7 @@ import java.io.FileNotFoundException;
 				return;
 			}
 		}
-		throw new HandleNotRecognisedException("The handle '" + handle + "' is not recognised");
+		throw new HandleNotRecognisedException("The handle '" + handle + "' was not recognised");
 	}
 	
 	@Override
@@ -101,12 +104,14 @@ import java.io.FileNotFoundException;
 		Accounts matchingAccount = null;
 		for (Accounts account : accountList) {
 			if (account.getHandle().equals(oldHandle)) {
+				//indicates that the handle entered has been recognised
 				matchingAccount = account;
 				break;
 			}
 		}
+		//throws exception if no matching account found
 		if (matchingAccount == null) {
-			throw new HandleNotRecognisedException("The handle '" + oldHandle + "' is not recognised");
+			throw new HandleNotRecognisedException("The handle '" + oldHandle + "' was not recognised");
 		}
 		for (Accounts account : accountList) {
 			if (account.getHandle().equals(newHandle)) {
@@ -120,6 +125,7 @@ import java.io.FileNotFoundException;
 		} else if (newHandle.contains(" ")) {
 			throw new InvalidHandleException("The handle cannot contain white spaces");
 		}
+		//sets old handle to new handle
 		matchingAccount.Handle = newHandle;
 	}
 	
@@ -127,24 +133,28 @@ import java.io.FileNotFoundException;
 	public void updateAccountDescription(String handle, String description) throws HandleNotRecognisedException {
 		for(Accounts account : accountList){
 			if(account.Handle == handle){
+				//changes description if handle recognised
 				account.Description = description;
 				return;
 			}
 		}
-		throw new HandleNotRecognisedException("The handle '" + handle + "' is not recognised");
+		throw new HandleNotRecognisedException("The handle '" + handle + "' was not recognised");
 	}
 
 	@Override
 	public String showAccount(String handle) throws HandleNotRecognisedException {
+		//intialises matchingAccount to null
 		Accounts matchingAccount = null;
+		//loops through each account and display account details if found
 		for(Accounts account : accountList){
 			if (account.getHandle().equals(handle)) {
 				matchingAccount = account;
 				System.out.print("\nID: " + account.ID +  "\nHandle: " + account.Handle + "\nDescription: " +  account.Description + "\n");
 			}
 		}
+		//throws exception if no handle recognised
 		if (matchingAccount == null) {
-			throw new HandleNotRecognisedException("The handle '" + handle + "' is not recognised");
+			throw new HandleNotRecognisedException("The handle '" + handle + "' was not recognised");
 		}
 		return null;
 	}
@@ -152,7 +162,9 @@ import java.io.FileNotFoundException;
 	@Override
 	public int createPost(String handle, String message) throws HandleNotRecognisedException, InvalidPostException {
 		Accounts matchingAccount = null;
+		//creates new post object with given message
 		Posts post = new Posts(message);
+		//assigns account handle to post object
 		post.AccountHandleLink = handle;
 		for (Accounts account : accountList){
 			if(account.getHandle().equals(handle)){
@@ -164,41 +176,63 @@ import java.io.FileNotFoundException;
 				matchingAccount = account;
 				post.postID = account.ID;
 				post.postID = postList.size() + 1;
+				//adds post to postList if handle matches with an account
 				postList.add(post);
+				//prints post ID, account handle, and post content
 				System.out.println("ID: " + post.postID + "\nAccount: " + post.AccountHandleLink + "\n" + post.postContent + "\n");
 			}
 		}
 		if (matchingAccount == null) {
-			throw new HandleNotRecognisedException("The handle '" + handle + "' is not recognised");
+			throw new HandleNotRecognisedException("The handle '" + handle + "' was not recognised");
 		}
 		return 0;
 	}
 
-	//***need to work out a way to display id and handle of endorsing account like its a post and the endorseBody is the message within
-	String endorseBody;
+	//**notactionableexception does not work as endorse post does not add to post list 
 	@Override
-	public int endorsePost(String handle, int id){ //throws HandleNotRecognisedException, PostIDNotRecognisedException, NotActionablePostException {
-		Endorsements endorsePost = new Endorsements(id, handle);
-		endorsementList.add(endorsePost);
-		String endorsedHandle = null; //initialise to null
-		for (Posts post : postList){
-			if(post.postID == id){
-				endorsedHandle = post.AccountHandleLink; //assign the handle of the account being endorsed
-				endorseBody = "\nEP@" + endorsedHandle + ": " + post.postContent;
-				System.out.println(endorseBody);
-			}
-		}
-		
+	public int endorsePost(String handle, int id) throws HandleNotRecognisedException, PostIDNotRecognisedException, NotActionablePostException {
+		Accounts matchingAccount = null;
+		for (Accounts account : accountList){
+			//checks if the handle is valid
+			if(account.getHandle().equals(handle)){
+				matchingAccount = account;
+				//creates an endorsement post
+				Endorsements endorsePost = new Endorsements(id, handle);
+				endorsementList.add(endorsePost);
+				String endorsedHandle = null; 
+				//finds the post being endorsed by ID
+				for (Posts post : postList){
+					if(post.postID == id){
+						//checks if the post is an endorsement post
+						if (post instanceof Endorsements) {
+							throw new NotActionablePostException("Cannot endorse an endorsement post");
+						}
+						//assigns the handle of the account being endorsed
+						endorsedHandle = post.AccountHandleLink; 
+						endorsePost.endorsementBody = "\nEP@" + endorsedHandle + ": " + post.postContent;
+						System.out.println("\nAccount: " + handle + endorsePost.endorsementBody);
+					} else {
+						throw new PostIDNotRecognisedException("The post ID '" + id + "' was not recognised");
+					}
+				}
+			}		
+		}	
+		if (matchingAccount == null) {
+			throw new HandleNotRecognisedException("The handle '" + handle + "' was not recognised");
+		}	
 		return 0; 
 	}
 
+	//still working on
 	@Override
 	public int commentPost(String handle, int id, String message){ //throws HandleNotRecognisedException,
 			//PostIDNotRecognisedException, NotActionablePostException, InvalidPostException {
+			Accounts matchingAccount = null;
 			Comments comment = new Comments(handle, id, message);		
 			comment.commentId = commentList.size() + 1;
-			commentList.add(comment);
-		 
+			commentList.add(comment);	
+			comment.commentBody = "\nComment of PostID " + id + ": " + message;
+			System.out.println("\nAccount: " + handle + comment.commentBody); 
 		return 0;
 	}
  
@@ -214,8 +248,7 @@ import java.io.FileNotFoundException;
 				endorsementList.remove(endorsement);
 			}
 		}
-		//Need to create logic for changing comments to default message but ionwanna cos it sounds hard - do later
-			
+		//Need to create logic for changing comments to default message but ionwanna cos it sounds hard - do later		
 	}
 	
 	
@@ -237,7 +270,7 @@ import java.io.FileNotFoundException;
 
 		for(Posts post : postList){
 			if(post.postID == id){
-				System.out.print("ID:" + post.postID + "\nAccount:" + post.AccountHandleLink + "\nNo. Endorsements: " + postEndorseNo + "\nNo. Comments: " + postCommentsNo + "\n" + post.postContent);
+				System.out.print("ID:" + post.postID + "\nAccount: " + post.AccountHandleLink + "\nNo. Endorsements: " + postEndorseNo + "\nNo. Comments: " + postCommentsNo + "\n" + post.postContent);
 			}
 		}
 
@@ -256,7 +289,6 @@ import java.io.FileNotFoundException;
 
 	@Override
 	public int getNumberOfAccounts() {
-		//Not sure why this is hard but it's done 
 		return accountList.size();
 	}
 
@@ -295,9 +327,6 @@ import java.io.FileNotFoundException;
 		}
 		return postIdHigh;
 	}
-
-
-
 
 	int mostEndorsedAccountId;
 	int mostEndorsedCount;
