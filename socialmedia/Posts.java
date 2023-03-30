@@ -22,48 +22,25 @@ public class Posts implements Serializable{
     }
     int Counter;
     BadSocialMedia platform = new BadSocialMedia();
-    public int getNoEndorsements(){
+    public int getNoEndorsements(){ //Finds how many endorsements a post has 
         Counter = 0;
         for(Endorsements endorsement : platform.endorsementList){
-            if(endorsement.postID == this.postID){
+            if(endorsement.postID == this.postID){ // loops through ever endorsement relevent to this post object and increments a counter
                 Counter ++;
             }
         }
-        return Counter;
+        return Counter; //returns the counter
     }
     
-    public int getNoComments(){
+    public int getNoComments(){ //Finds how many comments a post has
         Counter = 0;
         for(Comments comment : platform.commentList){
-            if(comment.commentPostId == this.postID){
+            if(comment.commentPostId == this.postID){ //loops through every endorsement relevent to this post object and increments a counter
                 Counter ++;
             }
         }
-        return Counter;
-    }
-    String cummulativeIDs;
-    public String getCommentIDs(int id){
-        for(Comments comment : platform.commentList){
-            if(comment.commentId == id){
-                cummulativeIDs = cummulativeIDs + comment.commentId + ",";
-            }
-        }
-
-        return cummulativeIDs;
-    }
-    public String displayPost(int id){
-        for(Posts post : platform.postList){
-            if(post.postID == id){
-                return "ID:" + post.postID + "\nNo.comments:";
-
-            }
-        }
-
-
-
-        return "No Posts";
-    }
-    
+        return Counter; //returns the counter
+    } 
 }    
     class Endorsements extends Posts implements Serializable{
         public int endorsedPostId;
@@ -73,8 +50,11 @@ public class Posts implements Serializable{
          //Construtor for endorsements Object
         public Endorsements(int endorsedPostId, String endorseAccHandle){
             this.endorsedPostId = endorsedPostId;
-            this.endorseAccHandle = endorseAccHandle;
-        
+            this.endorseAccHandle = endorseAccHandle;     
+        }
+        //default constructor
+        public Endorsements(){
+
         }
     }
 
@@ -90,20 +70,10 @@ public class Posts implements Serializable{
             this.commentPostId = commentPostId;
             this.commentBody = commentBody;
         }
-
+        //default constructor
         public Comments(){
             
         }
-        String cummulativeIDs;
-        public String getCommentIDs(int id){
-            for(Comments comment : platform.commentList){
-                if(comment.commentId == id){
-                    cummulativeIDs = cummulativeIDs + comment.commentId + ",";
-                }
-            }
-            return cummulativeIDs;
-        }    
-
     }
 
 

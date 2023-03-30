@@ -4,19 +4,13 @@ import java.io.Serializable;
 import java.io.IOException;
 import java.io.*;
 import java.io.FileNotFoundException;
-/**
- * BadSocialMedia is a minimally compiling, but non-functioning implementor of
- * the SocialMediaPlatform interface.
- * 
- * @author Diogo Pacheco
- * @version 1.0
- */
+
 //public class BadSocialMedia implements SocialMediaPlatform {
   public class BadSocialMedia implements SocialMediaPlatform, Serializable {
-	public ArrayList<Accounts> accountList = new ArrayList<Accounts>();
-	public ArrayList<Posts> postList = new ArrayList<Posts>();
-	public ArrayList<Endorsements> endorsementList = new ArrayList<Endorsements>();
-	public ArrayList<Comments>  commentList = new ArrayList<Comments>();
+	public ArrayList<Accounts> accountList = new ArrayList<Accounts>(); //accountList will store account objects
+	public ArrayList<Posts> postList = new ArrayList<Posts>(); // postList will store post objects
+	public ArrayList<Endorsements> endorsementList = new ArrayList<Endorsements>(); // endorsementList will store endorsement objects
+	public ArrayList<Comments>  commentList = new ArrayList<Comments>(); // commentList will store comment objects
 
 
 	//getter method so array can be accessed in other classes
@@ -26,7 +20,7 @@ import java.io.FileNotFoundException;
 
 	@Override
 	public int createAccount(String handle) throws IllegalHandleException, InvalidHandleException{
-		//adds account for testing
+		//checks if handle is free
 		for (Accounts account : accountList) {
 			if (account.getHandle().equals(handle)) {
 				// gives exception if handle is reocgnised 
@@ -52,6 +46,7 @@ import java.io.FileNotFoundException;
 
 	@Override
 	public int createAccount(String handle, String description) throws IllegalHandleException, InvalidHandleException {
+		//checks to see if account Handle is free or not
 		for (Accounts account : accountList) {
 			if (account.getHandle().equals(handle)) { 
 				throw new IllegalHandleException("The handle '" + handle + "' is taken");
@@ -92,6 +87,29 @@ import java.io.FileNotFoundException;
 				return;
 			}
 		}
+
+		//Removes all endorsements associalted with the main account
+		ArrayList<Endorsements> endorseRemove = new ArrayList<Endorsements>(); // Creates an arrayList storing the endorsements to be removed
+			for(Endorsements endorsement : endorsementList){ 
+				if(endorsement.AccountHandleLink == handle){ //Checks through every endorsement and only finds the ones relevant to the account being removed
+					endorseRemove.add(endorsement);					
+				}
+			}
+			for(Endorsements eR : endorseRemove){//Removes every endorsement associated with the account
+				endorsementList.remove(eR);
+			}
+
+		//Removes every comment associated with the removed account
+		ArrayList<Comments> commentRemove = new ArrayList<Comments>(); //creates an array to store comments ready to be removed
+			for(Comments comment : commentList){
+				if(comment.commentHandle == handle){ //only finds the relevant comments 
+					commentRemove.add(comment);				
+				}
+			}
+			for(Comments cR : commentRemove){ // removes every comment associated with the account
+					cR.commentPostId = 0;
+					cR.AccountHandleLink = "";
+			}
 		throw new HandleNotRecognisedException("The handle '" + handle + "' was not recognised");
 	}
 	
@@ -146,6 +164,7 @@ import java.io.FileNotFoundException;
 		for(Accounts account : accountList){
 			if (account.getHandle().equals(handle)) { 
 				matchingAccount = account;
+				//displays a string detailing the entire account
 				System.out.print("\nID: " + account.ID +  "\nHandle: " + account.Handle + "\nDescription: " +  account.Description + "\n");
 			}
 		}
@@ -174,9 +193,7 @@ import java.io.FileNotFoundException;
 				post.postID = account.ID;
 				post.postID = postList.size() + 1;
 				//adds post to postList if handle matches with an account
-				postList.add(post);
-				//prints post ID, account handle, and post content
-				System.out.println("ID: " + post.postID + "\nAccount: " + post.AccountHandleLink + "\n" + post.postContent + "\n");
+				postList.add(post);				
 			}
 		}
 		if (matchingAccount == null) {
@@ -187,6 +204,7 @@ import java.io.FileNotFoundException;
 
 	@Override
 	public int endorsePost(String handle, int id) throws HandleNotRecognisedException, PostIDNotRecognisedException, NotActionablePostException {
+		foundFlag = false;
 		Accounts matchingAccount = null;
 		for (Accounts account : accountList){
 			//checks if the handle is valid
@@ -199,20 +217,22 @@ import java.io.FileNotFoundException;
 				//finds the post being endorsed by ID
 				for (Posts post : postList){
 					if(post.postID == id){
+						foundFlag = true;
 						//checks if the post is an endorsement post
 						if (post instanceof Endorsements) {
 							throw new NotActionablePostException("Cannot endorse an endorsement post");
 						}
 						//assigns the handle of the account being endorsed
 						endorsedHandle = post.AccountHandleLink; 
-						endorsePost.endorsementBody = "\nEP@" + endorsedHandle + ": " + post.postContent;
-						System.out.println("\nAccount: " + handle + endorsePost.endorsementBody);
-					} else {
-						throw new PostIDNotRecognisedException("The post ID '" + id + "' was not recognised");
+						endorsePost.endorsementBody = "\nEP@" + endorsedHandle + ": " + post.postContent;						
 					}
 				}
-			}		
-		}	
+				if(foundFlag == false){
+						throw new PostIDNotRecognisedException("The post ID '" + id + "' was not recognised");
+				}					
+			}
+		}		
+			
 		if (matchingAccount == null) {
 			throw new HandleNotRecognisedException("The handle '" + handle + "' was not recognised");
 		}	
@@ -221,10 +241,8 @@ import java.io.FileNotFoundException;
 
 	@Override
 	public int commentPost(String handle, int id, String message) throws HandleNotRecognisedException, PostIDNotRecognisedException, NotActionablePostException, InvalidPostException {
-		Accounts matchingAccount = null;
 		for (Accounts account : accountList) {
-			if (account.getHandle().equals(handle)) {
-				matchingAccount = account;
+			if (account.getHandle().equals(handle)) {				
 				//searches for post that matches ID provided
 				for (Posts post : postList) {
 					if (post.postID == id) {
@@ -238,8 +256,7 @@ import java.io.FileNotFoundException;
 						Comments comment = new Comments(handle, id, message);
 						comment.commentId = commentList.size() + 1;
 						commentList.add(comment);
-						comment.commentBody = "\nComment of PostID " + id + ": " + message;
-						System.out.println("\nAccount: " + handle + comment.commentBody);
+						comment.commentBody = "\nComment of PostID " + id + ": " + message;						
 						return 0;
 					}
 				}
@@ -251,28 +268,55 @@ import java.io.FileNotFoundException;
 		throw new HandleNotRecognisedException("The handle '" + handle + "' was not recognised");			
 	}
 
+	boolean foundFlag = false;
 	@Override
 	public void deletePost(int id) throws PostIDNotRecognisedException {
 		//checks through list of all the posts and removes posts where postID is equal to id fed into the function
+		Posts postRemove = new Posts();
 		for (Posts post : postList){
 			if(post.postID == id){
-				postList.remove(post);			
-			} else {
+				
+				postRemove =post;		
+				foundFlag = true;	//Sets foundFlag to true, meaning an account matching the input ID was found
+			} 
+		}		
+			if(foundFlag == false){ // Checks if an account was found or not 
 				throw new PostIDNotRecognisedException("The post ID '" + id + "' was not recognised");
-			}
+			}			
+			postList.remove(postRemove);// removes the targeted post
+			
 			//removes all endorsements related to the removed post
+			ArrayList<Endorsements> endorseRemove = new ArrayList<Endorsements>(); //Creates an arrayList storing the endorsements that have to be removed  
 			for(Endorsements endorsement : endorsementList){ 
-				if(endorsement.postID == id){
-					endorsementList.remove(endorsement);
+				if(endorsement.endorsedPostId == id){
+					endorseRemove.add(endorsement);	//checks to see if the endorsed post is related to the removed post and adds it to arrayList	
 				}
-			}		
-		}
+			}
+			for(Endorsements eR : endorseRemove){
+				endorsementList.remove(eR); // removes every endorsement related to removed post
+			}
+			
+
+			//Removes the comments that are related to the targeted post
+			ArrayList<Comments> commentRemove = new ArrayList<Comments>(); //Creates an arrayList storing the comments to be removed 
+			for(Comments comment : commentList){ 
+				if(comment.commentPostId == id){ // checks to see if the comment is related to the removed post
+					commentRemove.add(comment);	//sets the comment to be removed later		
+				}
+			}
+			for(Comments cR : commentRemove){ //removes all references to the account but leaves the comment message
+					cR.commentPostId = 0;
+					cR.AccountHandleLink = "";
+			}
+	
+		
 	}
 	
 	int postEndorseNo;
 	int postCommentsNo;
 	@Override
 	public String showIndividualPost(int id) throws PostIDNotRecognisedException {
+		foundFlag = false;
 		for(Endorsements endorse : endorsementList){ //checks how many endorsements the post has and stores in variable
 			if(endorse.endorsedPostId == id)
 			postEndorseNo ++;
@@ -284,97 +328,51 @@ import java.io.FileNotFoundException;
 		}
 		for(Posts post : postList){ //finds the postID and then displays the full formatted message 
 			if(post.postID == id){
+				foundFlag = true;
 				System.out.print("ID:" + post.postID + "\nAccount: " + post.AccountHandleLink + "\nNo. Endorsements: " + postEndorseNo + " | No. Comments: " + postCommentsNo + "\n" + post.postContent);
-			} else {
-				throw new PostIDNotRecognisedException("The post ID '" + id + "' was not recognised");
-			}
+			} 
+			if(foundFlag == false){
+					throw new PostIDNotRecognisedException("The post ID '" + id + "' was not recognised");
+			}			
 		}
 		return null;
 	}
-		
-		private static void appendCommentsRecursive(int postID, ArrayList<Comments> CommentsList, StringBuilder sb, int indentLevel) {
-			if (CommentsList.isEmpty()) {
-				return;
-			}
-		
-		
-		//finds all comments made on the post
-		ArrayList<Comments> comments = new ArrayList<>();
-		for (Comments c : CommentsList) {
-			if (c.commentPostId == postID) {
-				comments.add(c);
-			}
-		}
-	
-		// Sort comments by timestamp (or some other criteria)
-		// Collections.sort(comments, new Comparator<Comment>() {
-		// 	@Override
-		// 	public int compare(Comment c1, Comment c2) {
-		// 		return c1.getTimestamp().compareTo(c2.getTimestamp());
-		// 	}
-		// });
-	
-		//appends each comment to the StringBuilder with proper indentation
-		for (Comments c : comments) {
-			for (int i = 0; i < indentLevel; i++) {
-				sb.append("\t");
-			}
-			sb.append(c.toString());
-			sb.append("\n");
-	
-			//recursively append all comments made on this comment
-			appendCommentsRecursive(c.commentPostId, CommentsList, sb, indentLevel + 1);
-		}
-		}
+				
 	@Override
-	public StringBuilder showPostChildrenDetails(int id) throws PostIDNotRecognisedException, NotActionablePostException {
-		//finds the post with the specified postID
-		Posts post = null;
-		for (Posts p : postList) {
-			if (p.postID == id) {
-				if (post instanceof Endorsements){
-					throw new NotActionablePostException("Cannot endorse an endorsement post");
-				}
-				post = p;
-				break;
-			} else {
-			throw new PostIDNotRecognisedException("The post ID '" + id + "' was not recognised");
-			}
+	public StringBuilder showPostChildrenDetails(int id) throws PostIDNotRecognisedException, NotActionablePostException {	
+		StringBuilder sb = new StringBuilder();
+		int errorSave = 0;
+		if(errorSave < 1){
+			throw new PostIDNotRecognisedException();
 		}
 		
-	
-		// Create a StringBuilder to store the formatted post and comments
-		StringBuilder sb = new StringBuilder();
-	
-		// Append the post to the StringBuilder
-		sb.append(post.toString());
-		sb.append("\n");
-	
-		// Recursively append all comments made on the post
-		appendCommentsRecursive(id, commentList, sb, 1);
-	
-		return sb;		
+		if(errorSave > 1){
+			throw new NotActionablePostException("N/A");
+		}
+		
+		return sb;
+				
 	}
 
 	@Override
 	public int getNumberOfAccounts() {
-		return accountList.size();
+		return accountList.size(); //Returns number of accounts
 	}
 
 	@Override
 	public int getTotalOriginalPosts() {
 		
-		return postList.size();
+		return postList.size(); //Returns number of posts
 	}
 
 	@Override
 	public int getTotalEndorsmentPosts() {
-		return endorsementList.size();
+		return endorsementList.size(); //returns number endorsements
 	}
 
 	@Override
 	public int getTotalCommentPosts() {
-		return commentList.size();
+		return commentList.size(); //returns number of comments 
 	}
 
 	int currentHighest;
@@ -383,18 +381,18 @@ import java.io.FileNotFoundException;
 	@Override
 	public int getMostEndorsedPost() {
 		for(Posts post : postList){
-			for(Endorsements endorsement : endorsementList){
-				if(endorsement.postID == post.postID){
-					tempHighest = tempHighest + 1;
+			for(Endorsements endorsement : endorsementList){ //For every post checks through ever endorsement 
+				if(endorsement.endorsedPostId == post.postID){ //checks to see if the endorsed post is relevent 
+					tempHighest = tempHighest + 1; //increments the counter for the curent post only
 				}
-				if(tempHighest > currentHighest){
-					currentHighest = tempHighest;
-					postIdHigh = post.postID;
+				if(tempHighest > currentHighest){ //checks if the endorsement counter for the current post is higher than the total highest
+					currentHighest = tempHighest; 
+					postIdHigh = post.postID; //changes the id of the most endorsed post to the new highest one
 				}
 			}
-			tempHighest = 0;
+			tempHighest = 0;			
 		}
-		return postIdHigh;
+		return  postIdHigh;
 	}
 
 	int mostEndorsedAccountId;
@@ -409,7 +407,7 @@ import java.io.FileNotFoundException;
 			for(Posts post : postList){//Loops through every post for every account
 				if(post.AccountHandleLink == account.Handle){ //Checks that the post is relevant to the account of the current loop
 					for(Endorsements endorsement : endorsementList){ //loops through every endorsement 
-						if(endorsement.postID == post.postID){ //checks the endorsements to make sure they are for the specific post 
+						if(endorsement.endorsedPostId == post.postID){ //checks the endorsements to make sure they are for the specific post 
 							mostEndorsedCount = mostEndorsedCount + 1; //increments the counter for the specific post
 						}
 						if(mostEndorsedCount > highEndorsed){
@@ -426,7 +424,7 @@ import java.io.FileNotFoundException;
 	}
 
 	@Override
-	public void erasePlatform() {
+	public void erasePlatform() { //clears all the data on the platform
 		accountList.clear();
 		postList.clear();
 		commentList.clear();
@@ -434,7 +432,7 @@ import java.io.FileNotFoundException;
 	}
 
 	@Override
-	public void savePlatform(String filename) //throws IOException {
+	public void savePlatform(String filename)
 		{
 		ListofLists largeList = new ListofLists(postList, accountList, commentList, endorsementList); //Creates a list object that will store all the arrayLists 
 		try{
@@ -452,11 +450,12 @@ import java.io.FileNotFoundException;
 		catch(IOException e){
 			System.out.print("IO error");
 		}
+			
 	}
 
 	String hold;
 	@Override
-	 public void loadPlatform(String filename) //throws IOException, ClassNotFoundException {
+	 public void loadPlatform(String filename)
 	{
 	try {
 		FileInputStream fileIn = new FileInputStream(filename + ".ser"); //Creates the input Streams 
@@ -475,6 +474,5 @@ import java.io.FileNotFoundException;
 	} catch (IOException | ClassNotFoundException e) {
 		e.printStackTrace();
 	}
-	
   	}	
 }
