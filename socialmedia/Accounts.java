@@ -28,14 +28,6 @@ public class Accounts implements Serializable{
     public int getId() {
         return ID;
     }
-
-    //For deletion later after complete testing
-    //This is the constructor for accounts with Handles and descriptions
-    public Accounts(String handle, String description, int ID){
-        this.ID = ID;
-        this.Handle = handle;
-        this.Description = description;
-    }
     }
 
 
