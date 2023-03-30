@@ -1,11 +1,7 @@
 package socialmedia;
 import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.Arrays;
 import java.io.Serializable;
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.util.Scanner;
 import java.io.*;
 import java.io.FileNotFoundException;
 /**
@@ -55,7 +51,7 @@ import java.io.FileNotFoundException;
 	@Override
 	public int createAccount(String handle, String description) throws IllegalHandleException, InvalidHandleException {
 		for (Accounts account : accountList) {
-			if (account.getHandle().equals(handle)) {
+			if (account.getHandle().equals(handle)) { 
 				throw new IllegalHandleException("The handle '" + handle + "' is taken");
 			}
 		}
@@ -99,7 +95,7 @@ import java.io.FileNotFoundException;
 	@Override
 	public void changeAccountHandle(String oldHandle, String newHandle) throws HandleNotRecognisedException, IllegalHandleException, InvalidHandleException {
 		Accounts matchingAccount = null;
-		for (Accounts account : accountList) {
+		for (Accounts account : accountList){
 			if (account.getHandle().equals(oldHandle)) {
 				matchingAccount = account;
 				break;
@@ -125,9 +121,9 @@ import java.io.FileNotFoundException;
 	
 	@Override
 	public void updateAccountDescription(String handle, String description) throws HandleNotRecognisedException {
-		for(Accounts account : accountList){
+		for(Accounts account : accountList){ //searches the accountList until an account matching the handle is found
 			if(account.Handle == handle){
-				account.Description = description;
+				account.Description = description; // changes the account description to the new description 
 				return;
 			}
 		}
@@ -138,7 +134,7 @@ import java.io.FileNotFoundException;
 	public String showAccount(String handle) throws HandleNotRecognisedException {
 		Accounts matchingAccount = null;
 		for(Accounts account : accountList){
-			if (account.getHandle().equals(handle)) {
+			if (account.getHandle().equals(handle)) { 
 				matchingAccount = account;
 				System.out.print("\nID: " + account.ID +  "\nHandle: " + account.Handle + "\nDescription: " +  account.Description + "\n");
 			}
@@ -185,7 +181,6 @@ import java.io.FileNotFoundException;
 			if(post.postID == id){
 				endorsedHandle = post.AccountHandleLink; //assign the handle of the account being endorsed
 				endorseBody = "\nEP@" + endorsedHandle + ": " + post.postContent;
-				System.out.println(endorseBody);
 			}
 		}
 		
@@ -204,18 +199,17 @@ import java.io.FileNotFoundException;
  
 	@Override
 	public void deletePost(int id) throws PostIDNotRecognisedException {
-		for (Posts post : postList){
+		for (Posts post : postList){ //Checks through a list of all the posts and removes posts where the postID is equal to the id fed into the function
 			if(post.postID == id){
 				postList.remove(post);			
 			}
 		}
-		for(Endorsements endorsement : endorsementList){
+		for(Endorsements endorsement : endorsementList){ // removes all endorsements related to the removed post
 			if(endorsement.postID == id){
 				endorsementList.remove(endorsement);
 			}
 		}
-		//Need to create logic for changing comments to default message but ionwanna cos it sounds hard - do later
-			
+		//Need to create logic for changing comments to default message but ionwanna cos it sounds hard - do later			
 	}
 	
 	
@@ -224,18 +218,18 @@ import java.io.FileNotFoundException;
 	@Override
 	public String showIndividualPost(int id) //throws PostIDNotRecognisedException 
 	{
-		for(Endorsements endorse : endorsementList){
+		for(Endorsements endorse : endorsementList){ //checks how many endorsements the post has and stores in variable
 			if(endorse.endorsedPostId == id)
 			postEndorseNo ++;
 		}
 
-		for(Comments comment : commentList){
+		for(Comments comment : commentList){ // checks how many comments the post has and stores in variable
 			if(comment.commentPostId == id){
 				postCommentsNo ++;
 			}
 		}
 
-		for(Posts post : postList){
+		for(Posts post : postList){ // Finds the postID and then displays the full formatted message 
 			if(post.postID == id){
 				System.out.print("ID:" + post.postID + "\nAccount:" + post.AccountHandleLink + "\nNo. Endorsements: " + postEndorseNo + "\nNo. Comments: " + postCommentsNo + "\n" + post.postContent);
 			}
@@ -246,17 +240,70 @@ import java.io.FileNotFoundException;
 
 		return null;
 	}
-
-	@Override
-	public StringBuilder showPostChildrenDetails(int id)
-			throws PostIDNotRecognisedException, NotActionablePostException {
+		private static void appendCommentsRecursive(int postID, ArrayList<Comments> CommentsList, StringBuilder sb, int indentLevel) {
+			if (CommentsList.isEmpty()) {
+				return;
+			}
+		
+		
+			// Find all comments made on the post
+		ArrayList<Comments> comments = new ArrayList<>();
+		for (Comments c : CommentsList) {
+			if (c.commentPostId == postID) {
+				comments.add(c);
+			}
+		}
 	
-		return null;
+		// Sort comments by timestamp (or some other criteria)
+		// Collections.sort(comments, new Comparator<Comment>() {
+		// 	@Override
+		// 	public int compare(Comment c1, Comment c2) {
+		// 		return c1.getTimestamp().compareTo(c2.getTimestamp());
+		// 	}
+		// });
+	
+		// Append each comment to the StringBuilder with proper indentation
+		for (Comments c : comments) {
+			for (int i = 0; i < indentLevel; i++) {
+				sb.append("\t");
+			}
+			sb.append(c.toString());
+			sb.append("\n");
+	
+			// Recursively append all comments made on this comment
+			appendCommentsRecursive(c.commentPostId, CommentsList, sb, indentLevel + 1);
+		}
+		}
+	@Override
+	public StringBuilder showPostChildrenDetails(int id)//throws PostIDNotRecognisedException, NotActionablePostException {
+	{
+		   // Find the post with the specified postID
+		   Posts post = null;
+		   for (Posts p : postList) {
+			   if (p.postID == id) {
+				   post = p;
+				   break;
+			   }
+		   }
+		   if (post == null) {
+			   System.out.print("post not found");
+		   }
+	   
+		   // Create a StringBuilder to store the formatted post and comments
+		   StringBuilder sb = new StringBuilder();
+	   
+		   // Append the post to the StringBuilder
+		   sb.append(post.toString());
+		   sb.append("\n");
+	   
+		   // Recursively append all comments made on the post
+		   appendCommentsRecursive(id, commentList, sb, 1);
+	   
+		   return sb;		
 	}
 
 	@Override
 	public int getNumberOfAccounts() {
-		//Not sure why this is hard but it's done 
 		return accountList.size();
 	}
 
@@ -338,12 +385,11 @@ import java.io.FileNotFoundException;
 	@Override
 	public void savePlatform(String filename) //throws IOException {
 		{
-		ListofLists largeList = new ListofLists(postList, accountList, commentList, endorsementList);
-        // Create a file output stream to write the serialized object to a file
+		ListofLists largeList = new ListofLists(postList, accountList, commentList, endorsementList); //Creates a list object that will store all the arrayLists 
 		try{
-		FileOutputStream fileOut = new FileOutputStream(filename + ".ser");
+		FileOutputStream fileOut = new FileOutputStream(filename + ".ser"); //creates the output streams
 		ObjectOutputStream out = new ObjectOutputStream(fileOut);
-		out.writeObject(largeList);
+		out.writeObject(largeList); //writes the largeList object to the serialized file
          
 		// Close the output streams
 		out.close();
@@ -362,15 +408,15 @@ import java.io.FileNotFoundException;
 	 public void loadPlatform(String filename) //throws IOException, ClassNotFoundException {
 	{
 	try {
-		FileInputStream fileIn = new FileInputStream(filename);
+		FileInputStream fileIn = new FileInputStream(filename + ".ser"); //Creates the input Streams 
 		ObjectInputStream objectIn = new ObjectInputStream(fileIn);
 	
-		ListofLists listOfLists = (ListofLists) objectIn.readObject();
+		ListofLists listOfLists = (ListofLists) objectIn.readObject(); // fills the listofLists object with the serialized data
 	
-		objectIn.close();
+		objectIn.close(); //closes the input streams
 		fileIn.close();
 	
-		accountList = listOfLists.getAccountList();
+		accountList = listOfLists.getAccountList(); //fills all the data arrayLists with the deserialised data
 		endorsementList = listOfLists.getEndorsementList();
 		commentList = listOfLists.getCommentList();
 		postList = listOfLists.getPostList();

@@ -38,29 +38,29 @@ public class SocialMediaPlatformTestApp implements Serializable {
 		// //platform.showAccount("ertgh");
 
 		//Please dont delete below me **************************************************************************************************
-		// platform.createAccount("Greggy");
-		// platform.createAccount("Willy");
-		// platform.createPost("Greggy", "Drew has a foot fetish");
-		// platform.createPost("Willy", "wow, no way");
-		// platform.endorsePost("Greggy", 2);
-		// platform.endorsePost("Willy", 1);
-		// platform.commentPost("Greggy", 1 , "Forreall");
-		// platform.commentPost("Willy", 2, "Forsure");
+		platform.createAccount("Greggy");
+		platform.createAccount("Willy");
+		platform.createPost("Greggy", "Drew has a foot fetish");
+		platform.createPost("Willy", "wow, no way");
+		platform.endorsePost("Greggy", 2);
+		platform.endorsePost("Willy", 1);
+		platform.commentPost("Greggy", 1 , "Forreall");
+		platform.commentPost("Willy", 2, "Forsure");
 
 		// platform.loadPlatform("Test");
 		// for(Posts post : platform.postList){
 		// 	System.out.print(post.postID);
 		// }
 		//platform.savePlatform("Test");
-		platform.loadPlatform("Test.ser");
-		System.out.print(platform.accountList.size());
-		System.out.print(platform.endorsementList.size());
-		System.out.print(platform.commentList.size());
-		System.out.print(platform.postList.size());
+		// platform.loadPlatform("Test");
+		// System.out.print(platform.accountList.size());
+		// System.out.print(platform.endorsementList.size());
+		// System.out.print(platform.commentList.size());
+		// System.out.print(platform.postList.size());
 		// for(Accounts account : platform.accountList){
 		// 	System.out.print(account.Handle);
 		// }
-		platform.showIndividualPost(1);
+		platform.showPostChildrenDetails(1);
 
 	}
 	

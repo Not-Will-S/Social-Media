@@ -1,8 +1,5 @@
 package socialmedia;
-
 import java.io.Serializable;
-
-import org.w3c.dom.css.Counter;
 
 public class Posts implements Serializable{
     public int postID;
@@ -44,7 +41,30 @@ public class Posts implements Serializable{
         }
         return Counter;
     }
-}
+    String cummulativeIDs;
+    public String getCommentIDs(int id){
+        for(Comments comment : platform.commentList){
+            if(comment.commentId == id){
+                cummulativeIDs = cummulativeIDs + comment.commentId + ",";
+            }
+        }
+
+        return cummulativeIDs;
+    }
+    public String displayPost(int id){
+        for(Posts post : platform.postList){
+            if(post.postID == id){
+                return "ID:" + post.postID + "\nNo.comments:";
+
+            }
+        }
+
+
+
+        return "No Posts";
+    }
+    
+}    
     class Endorsements extends Posts implements Serializable{
         public int endorsedPostId;
         public String endorseAccHandle;
@@ -74,6 +94,15 @@ public class Posts implements Serializable{
         public Comments(){
             
         }
+        String cummulativeIDs;
+        public String getCommentIDs(int id){
+            for(Comments comment : platform.commentList){
+                if(comment.commentId == id){
+                    cummulativeIDs = cummulativeIDs + comment.commentId + ",";
+                }
+            }
+            return cummulativeIDs;
+        }    
 
     }
 
