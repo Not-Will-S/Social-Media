@@ -43,7 +43,7 @@ import java.io.FileNotFoundException;
 		}
 		//instantiates Accounts to create a new object
 		Accounts account = new Accounts(handle);
-		//finds what the next account ID should be by finding the total number of accounts and incrementing it
+		//finds next account ID should be by finding the total number of accounts and incrementing it
 		account.ID = accountList.size() + 1;
 		//adds account object
 		accountList.add(account);
@@ -73,7 +73,7 @@ import java.io.FileNotFoundException;
 		
 	@Override
 	public void removeAccount(int id) throws AccountIDNotRecognisedException {		
-		//removes all accounts where the account id matches the value passed into the function
+		//removes all accounts where account id matches the value passed into the function
 		for (Accounts account : accountList) {
 			if (Integer.valueOf(account.getId()).equals(id)) {
 				accountList.remove(account);
@@ -85,7 +85,7 @@ import java.io.FileNotFoundException;
 
 	@Override
 	public void removeAccount(String handle) throws HandleNotRecognisedException {
-		//removes all accounts where the account handle matches the value passed into the function
+		//removes all accounts where account handle matches the value passed into the function
 		for (Accounts account : accountList) {
 			if (account.getHandle().equals(handle)) {
 				accountList.remove(account);
@@ -100,7 +100,7 @@ import java.io.FileNotFoundException;
 		Accounts matchingAccount = null;
 		for (Accounts account : accountList){
 			if (account.getHandle().equals(oldHandle)) {
-				//indicates that the handle entered has been recognised
+				//indicates that handle entered has been recognised
 				matchingAccount = account;
 				break;
 			}
@@ -127,7 +127,8 @@ import java.io.FileNotFoundException;
 	
 	@Override
 	public void updateAccountDescription(String handle, String description) throws HandleNotRecognisedException {
-		for(Accounts account : accountList){ //searches the accountList until an account matching the handle is found
+		//searches the accountList until an account matching the handle is found
+		for(Accounts account : accountList){ 
 			if(account.Handle == handle){
 				//changes description if handle recognised
 				account.Description = description;
@@ -184,7 +185,6 @@ import java.io.FileNotFoundException;
 		return 0;
 	}
 
-	//**notactionableexception does not work as endorse post does not add to post list 
 	@Override
 	public int endorsePost(String handle, int id) throws HandleNotRecognisedException, PostIDNotRecognisedException, NotActionablePostException {
 		Accounts matchingAccount = null;
@@ -219,69 +219,86 @@ import java.io.FileNotFoundException;
 		return 0; 
 	}
 
-	//still working on
 	@Override
-	public int commentPost(String handle, int id, String message){ //throws HandleNotRecognisedException,
-			//PostIDNotRecognisedException, NotActionablePostException, InvalidPostException {
-			Accounts matchingAccount = null;
-			Comments comment = new Comments(handle, id, message);		
-			comment.commentId = commentList.size() + 1;
-			commentList.add(comment);	
-			comment.commentBody = "\nComment of PostID " + id + ": " + message;
-			System.out.println("\nAccount: " + handle + comment.commentBody); 
-		return 0;
+	public int commentPost(String handle, int id, String message) throws HandleNotRecognisedException, PostIDNotRecognisedException, NotActionablePostException, InvalidPostException {
+		Accounts matchingAccount = null;
+		for (Accounts account : accountList) {
+			if (account.getHandle().equals(handle)) {
+				matchingAccount = account;
+				//searches for post that matches ID provided
+				for (Posts post : postList) {
+					if (post.postID == id) {
+						//checks if post is endorsement post or longer than 100 characters
+						if (post instanceof Endorsements) {
+							throw new NotActionablePostException("Cannot endorse an endorsement post");
+						} else if (message.length() > 100) {
+							throw new InvalidPostException("Cannot exceed 100 characters");
+						}
+						//creates a new comment and adds it to comment list
+						Comments comment = new Comments(handle, id, message);
+						comment.commentId = commentList.size() + 1;
+						commentList.add(comment);
+						comment.commentBody = "\nComment of PostID " + id + ": " + message;
+						System.out.println("\nAccount: " + handle + comment.commentBody);
+						return 0;
+					}
+				}
+				//throws exception if no post is found with ID provided
+				throw new PostIDNotRecognisedException("The post ID '" + id + "' was not recognised");
+			}
+		}
+		//throws exception if not account found with handle provided
+		throw new HandleNotRecognisedException("The handle '" + handle + "' was not recognised");			
 	}
- 
+
 	@Override
 	public void deletePost(int id) throws PostIDNotRecognisedException {
-		for (Posts post : postList){ //Checks through a list of all the posts and removes posts where the postID is equal to the id fed into the function
+		//checks through list of all the posts and removes posts where postID is equal to id fed into the function
+		for (Posts post : postList){
 			if(post.postID == id){
 				postList.remove(post);			
+			} else {
+				throw new PostIDNotRecognisedException("The post ID '" + id + "' was not recognised");
 			}
+			//removes all endorsements related to the removed post
+			for(Endorsements endorsement : endorsementList){ 
+				if(endorsement.postID == id){
+					endorsementList.remove(endorsement);
+				}
+			}		
 		}
-		for(Endorsements endorsement : endorsementList){ // removes all endorsements related to the removed post
-			if(endorsement.postID == id){
-				endorsementList.remove(endorsement);
-			}
-		}
-		//Need to create logic for changing comments to default message but ionwanna cos it sounds hard - do later		
 	}
-	
 	
 	int postEndorseNo;
 	int postCommentsNo;
 	@Override
-	public String showIndividualPost(int id) //throws PostIDNotRecognisedException 
-	{
+	public String showIndividualPost(int id) throws PostIDNotRecognisedException {
 		for(Endorsements endorse : endorsementList){ //checks how many endorsements the post has and stores in variable
 			if(endorse.endorsedPostId == id)
 			postEndorseNo ++;
 		}
-
-		for(Comments comment : commentList){ // checks how many comments the post has and stores in variable
+		for(Comments comment : commentList){ //checks how many comments the post has and stores in variable
 			if(comment.commentPostId == id){
 				postCommentsNo ++;
 			}
 		}
-
-		for(Posts post : postList){ // Finds the postID and then displays the full formatted message 
+		for(Posts post : postList){ //finds the postID and then displays the full formatted message 
 			if(post.postID == id){
-				System.out.print("ID:" + post.postID + "\nAccount: " + post.AccountHandleLink + "\nNo. Endorsements: " + postEndorseNo + "\nNo. Comments: " + postCommentsNo + "\n" + post.postContent);
+				System.out.print("ID:" + post.postID + "\nAccount: " + post.AccountHandleLink + "\nNo. Endorsements: " + postEndorseNo + " | No. Comments: " + postCommentsNo + "\n" + post.postContent);
+			} else {
+				throw new PostIDNotRecognisedException("The post ID '" + id + "' was not recognised");
 			}
 		}
-
-
-
-
 		return null;
 	}
+		
 		private static void appendCommentsRecursive(int postID, ArrayList<Comments> CommentsList, StringBuilder sb, int indentLevel) {
 			if (CommentsList.isEmpty()) {
 				return;
 			}
 		
 		
-			// Find all comments made on the post
+		//finds all comments made on the post
 		ArrayList<Comments> comments = new ArrayList<>();
 		for (Comments c : CommentsList) {
 			if (c.commentPostId == postID) {
@@ -297,7 +314,7 @@ import java.io.FileNotFoundException;
 		// 	}
 		// });
 	
-		// Append each comment to the StringBuilder with proper indentation
+		//appends each comment to the StringBuilder with proper indentation
 		for (Comments c : comments) {
 			for (int i = 0; i < indentLevel; i++) {
 				sb.append("\t");
@@ -305,36 +322,38 @@ import java.io.FileNotFoundException;
 			sb.append(c.toString());
 			sb.append("\n");
 	
-			// Recursively append all comments made on this comment
+			//recursively append all comments made on this comment
 			appendCommentsRecursive(c.commentPostId, CommentsList, sb, indentLevel + 1);
 		}
 		}
 	@Override
-	public StringBuilder showPostChildrenDetails(int id)//throws PostIDNotRecognisedException, NotActionablePostException {
-	{
-		   // Find the post with the specified postID
-		   Posts post = null;
-		   for (Posts p : postList) {
-			   if (p.postID == id) {
-				   post = p;
-				   break;
-			   }
-		   }
-		   if (post == null) {
-			   System.out.print("post not found");
-		   }
-	   
-		   // Create a StringBuilder to store the formatted post and comments
-		   StringBuilder sb = new StringBuilder();
-	   
-		   // Append the post to the StringBuilder
-		   sb.append(post.toString());
-		   sb.append("\n");
-	   
-		   // Recursively append all comments made on the post
-		   appendCommentsRecursive(id, commentList, sb, 1);
-	   
-		   return sb;		
+	public StringBuilder showPostChildrenDetails(int id) throws PostIDNotRecognisedException, NotActionablePostException {
+		//finds the post with the specified postID
+		Posts post = null;
+		for (Posts p : postList) {
+			if (p.postID == id) {
+				if (post instanceof Endorsements){
+					throw new NotActionablePostException("Cannot endorse an endorsement post");
+				}
+				post = p;
+				break;
+			} else {
+			throw new PostIDNotRecognisedException("The post ID '" + id + "' was not recognised");
+			}
+		}
+		
+	
+		// Create a StringBuilder to store the formatted post and comments
+		StringBuilder sb = new StringBuilder();
+	
+		// Append the post to the StringBuilder
+		sb.append(post.toString());
+		sb.append("\n");
+	
+		// Recursively append all comments made on the post
+		appendCommentsRecursive(id, commentList, sb, 1);
+	
+		return sb;		
 	}
 
 	@Override
