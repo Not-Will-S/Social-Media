@@ -6,18 +6,12 @@ import java.io.*;
 import java.io.FileNotFoundException;
 
 //public class BadSocialMedia implements SocialMediaPlatform {
-  public class BadSocialMedia implements SocialMediaPlatform, Serializable {
+  public class SocialMedia implements SocialMediaPlatform, Serializable {
 	public ArrayList<Accounts> accountList = new ArrayList<Accounts>(); //accountList will store account objects
 	public ArrayList<Posts> postList = new ArrayList<Posts>(); // postList will store post objects
 	public ArrayList<Endorsements> endorsementList = new ArrayList<Endorsements>(); // endorsementList will store endorsement objects
 	public ArrayList<Comments>  commentList = new ArrayList<Comments>(); // commentList will store comment objects
-
-
-	//getter method so array can be accessed in other classes
-	public ArrayList<Accounts> getMyArray(){
-		return accountList;
-	}
-
+	
 	@Override
 	public int createAccount(String handle) throws IllegalHandleException, InvalidHandleException{
 		//checks if handle is free

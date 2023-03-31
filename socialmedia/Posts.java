@@ -21,7 +21,7 @@ public class Posts implements Serializable{
 
     }
     int Counter;
-    BadSocialMedia platform = new BadSocialMedia();
+    SocialMedia platform = new SocialMedia();
     public int getNoEndorsements(){ //Finds how many endorsements a post has 
         Counter = 0;
         for(Endorsements endorsement : platform.endorsementList){
